@@ -15,7 +15,14 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = []
+dependencies = [
+    "fastcore>=1.12.11",
+    "ffmpeg-python>=0.2.0",
+    "httpx>=0.28.1",
+    "opuslib-next>=1.1.5",
+    "pynacl>=1.6.2",
+    "websockets>=16.0",
+]
 
 [project.urls]
 Repository = "https://github.com/AnswerDotAI/cordslite"
