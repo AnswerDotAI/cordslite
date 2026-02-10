@@ -121,7 +121,7 @@ class Attachment(DiscordObject):
         return f'<code>{self.filename}</code> ({self.content_type}, {self.size:,}B)'
 
 # %% ../nbs/00_core.ipynb #0a18f7f5
-@patch
+@patch(as_prop=True)
 def attachments(self:Message):
     return [Attachment(a, self.client) for a in self.data.get('attachments', [])]
 
