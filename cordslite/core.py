@@ -73,6 +73,11 @@ async def channels(self:Guild):
     data = (await self.client._req('GET', f'/guilds/{self.id}/channels')).json()
     return Channels(Channel(d, self.client) for d in data)
 
+# %% ../nbs/00_core.ipynb #eded7bca
+@patch
+async def get_channel(self:DiscordClient, channel_id):
+    return Channel((await self._req('GET', f'/channels/{channel_id}')).json(), self)
+
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
     def __repr__(self): 
