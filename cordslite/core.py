@@ -130,6 +130,12 @@ class Attachment(DiscordObject):
 def attachments(self:Message):
     return [Attachment(a, self.client) for a in self.data.get('attachments', [])]
 
+# %% ../nbs/00_core.ipynb #acf92bc2
+@patch
+async def create_dm(self:DiscordClient, user_id):
+    r = await self._req('POST', '/users/@me/channels', json={'recipient_id': user_id})
+    return Channel(r.json(), self)
+
 # %% ../nbs/00_core.ipynb #c5c3c669
 class User(DiscordObject):
     def __repr__(self): return f"User(id={self.id}, username={self.username!r})"
