@@ -4,8 +4,8 @@
 
 # %% auto #0
 __all__ = ['evt_typs', 'spf', 'sr', 'DiscordClient', 'DiscordObject', 'DiscordError', 'Guild', 'Channel', 'Channels', 'Message',
-           'Messages', 'User', 'Member', 'Members', 'GatewayClient', 'Op', 'Event', 'VoiceClient', 'get_ip', 'VoiceUDP',
-           'decrypt_pkt', 'silence', 'Bot']
+           'Messages', 'Attachment', 'User', 'Member', 'Members', 'GatewayClient', 'Op', 'Event', 'VoiceClient',
+           'get_ip', 'VoiceUDP', 'decrypt_pkt', 'silence', 'Bot']
 
 # %% ../nbs/00_core.ipynb #9868997a
 from fastcore.utils import *
@@ -30,7 +30,7 @@ class DiscordObject:
         if k.startswith('_'): raise AttributeError(k)
         try: return self.data[k]
         except KeyError: raise AttributeError(k)
-    def __dir__(self): return list(self.data.keys())
+    def __dir__(self): return list(self.data.keys()) + list(super().__dir__())
 
 # %% ../nbs/00_core.ipynb #5006d9a9
 class DiscordError(Exception):
@@ -99,11 +99,31 @@ async def messages(self:Channel, limit=50):
     data = (await self.client._req('GET', f'/channels/{self.id}/messages', params={'limit': limit})).json()
     return Messages(Message(d, self.client) for d in reversed(data))
 
-# %% ../nbs/00_core.ipynb #7d74f9f4
+# %% ../nbs/00_core.ipynb #3fd1132c
 @patch
-async def send(self:Channel, content):
-    r = await self.client._req('POST', f'/channels/{self.id}/messages', json={'content': content})
+async def send(self:Channel, content='', files=None):
+    "Send a message with optional file attachments"
+    path = f'/channels/{self.id}/messages'
+    if not files: r = await self.client._req('POST', path, json={'content': content})
+    else:
+        payload = dict(content=content)
+        fs = [('files[%d]' % i, (f.name, f.read_bytes(), None))
+              for i,f in enumerate([Path(f) for f in listify(files)])]
+        r = await self.client._req('POST', path, data={'payload_json': json.dumps(payload)}, files=fs)
     return Message(r.json(), self.client)
+
+# %% ../nbs/00_core.ipynb #fd998c99
+class Attachment(DiscordObject):
+    async def fetch(self): return (await self.client.cli.get(self.url)).content
+    def __repr__(self): return f"Attachment(filename={self.filename!r}, size={self.size}, type={self.content_type})"
+    def _repr_html_(self):
+        if self.content_type.startswith('image/'): return f'<img src="{self.url}" style="max-width:400px"><br><small>{self.filename} ({self.size:,}B)</small>'
+        return f'<code>{self.filename}</code> ({self.content_type}, {self.size:,}B)'
+
+# %% ../nbs/00_core.ipynb #0a18f7f5
+@patch(as_prop=True)
+def attachments(self:Message):
+    return [Attachment(a, self.client) for a in self.data.get('attachments', [])]
 
 # %% ../nbs/00_core.ipynb #c5c3c669
 class User(DiscordObject):
@@ -199,7 +219,7 @@ async def _listen(self:GatewayClient):
     while self.running:
         evt = await self.recv_evt()
         if evt.op == 0 and evt.type in getattr(self, 'handlers', {}):
-            await self.handlers[evt.type](evt.d)
+            asyncio.create_task(self.handlers[evt.type](evt.d))
 
 @patch
 def on(self:GatewayClient, event_type, handler):
