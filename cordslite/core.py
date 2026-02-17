@@ -8,6 +8,8 @@ __all__ = ['depoch', 'evt_typs', 'spf', 'sr', 'DiscordClient', 'DiscordObject', 
            'Event', 'VoiceClient', 'get_ip', 'VoiceUDP', 'decrypt_pkt', 'silence', 'Bot']
 
 # %% ../nbs/00_core.ipynb #9868997a
+from datetime import datetime, timedelta, timezone
+from fastcore.meta import *
 from fastcore.utils import *
 from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt as xchacha_decrypt
 
@@ -89,6 +91,7 @@ class Message(DiscordObject):
         preview = self.content[:30] + '...' if len(self.content) > 30 else self.content
         return f"Message(id={self.id}, author={author!r}, content={preview!r})"
 
+    @property
     async def channel(self):
         if not hasattr(self, '_ch'): self._ch = Channel((await self.client._req('GET', f'/channels/{self.channel_id}')).json(), self.client)
         return self._ch
@@ -126,7 +129,7 @@ async def search(self:Guild, content=None, author_id=None, channel_id=None, ment
         mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned,
         sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit).items() if v is not None}
     r = await self.client._req('GET', f'/guilds/{self.id}/messages/search', params=params)
-    return Messages(Message(m, self.client) for m in r.json()['messages'][0])
+    return Messages(Message(m[0], self.client) for m in r.json()['messages'])
 
 # %% ../nbs/00_core.ipynb #3fd1132c
 @patch
