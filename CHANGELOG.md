@@ -2,6 +2,14 @@
 
 <!-- do not remove -->
 
+## 0.0.4
+
+### New Features
+
+- Add search functionality for guilds and channels ([#3](https://github.com/AnswerDotAI/cordslite/pull/3)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add helpers for dms and channesl ([#2](https://github.com/AnswerDotAI/cordslite/pull/2)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.3
 
 ### New Features
