@@ -123,8 +123,8 @@ async def search(self:Guild, content=None, author_id=None, channel_id=None, ment
                  has=None, before=None, after=None, pinned=None, sort_by=None, sort_order=None,
                  offset=None, limit=None):
     "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
-    if before and not before.isdigit(): before = date2snowflake(before)
-    if after and not after.isdigit(): after = date2snowflake(after)
+    if before and not str(before).isdigit(): before = date2snowflake(before)
+    if after and not str(after).isdigit(): after = date2snowflake(after)
     params = {k:v for k,v in dict(content=content, author_id=author_id, channel_id=channel_id,
         mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned,
         sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit).items() if v is not None}
