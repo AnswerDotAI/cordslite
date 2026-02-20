@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.5
+
+### New Features
+
+- Replace user mention IDs with usernames in message content ([#4](https://github.com/AnswerDotAI/cordslite/pull/4)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.4
 
 ### New Features
