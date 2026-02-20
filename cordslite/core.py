@@ -13,7 +13,7 @@ from fastcore.meta import *
 from fastcore.utils import *
 from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt as xchacha_decrypt
 
-import asyncio,ffmpeg,httpx,json,opuslib_next,os,random,socket,time
+import asyncio,ffmpeg,httpx,json,opuslib_next,os,random,re,socket,time
 import websockets.asyncio.client
 
 # %% ../nbs/00_core.ipynb #d9e0f6cf
@@ -86,6 +86,14 @@ async def get_channel(self:DiscordClient, channel_id):
 
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
+    def __init__(self, data, client):
+        super().__init__(data, client)
+        self.raw_content = self.content
+        mentions = {m['id']: m['username'] for m in data.get('mentions', [])}
+        self.data['content'] = re.sub(  r'<@!?(\d+)>',
+                                        lambda m: f"@{mentions.get(m.group(1), 'unknown')}",
+                                        self.content)
+
     def __repr__(self): 
         author = self.author['username']
         preview = self.content[:30] + '...' if len(self.content) > 30 else self.content
