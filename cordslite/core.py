@@ -90,7 +90,9 @@ class Message(DiscordObject):
         super().__init__(data, client)
         self.raw_content = self.content
         mentions = {m['id']: m['username'] for m in data.get('mentions', [])}
-        self.data['content'] = re.sub(r'<@(\d+)>', lambda m: f"@{mentions.get(m.group(1), m.group(0))}", self.content)
+        self.data['content'] = re.sub(  r'<@!?(\d+)>',
+                                        lambda m: f"@{mentions.get(m.group(1), m.group(1))}",
+                                        self.content)
 
     def __repr__(self): 
         author = self.author['username']
