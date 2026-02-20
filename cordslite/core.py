@@ -91,7 +91,7 @@ class Message(DiscordObject):
         self.raw_content = self.content
         mentions = {m['id']: m['username'] for m in data.get('mentions', [])}
         self.data['content'] = re.sub(  r'<@!?(\d+)>',
-                                        lambda m: f"@{mentions.get(m.group(1), m.group(1))}",
+                                        lambda m: f"@{mentions.get(m.group(1), 'unknown')}",
                                         self.content)
 
     def __repr__(self): 
