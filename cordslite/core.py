@@ -139,6 +139,21 @@ async def search(self:Guild, content=None, author_id=None, channel_id=None, ment
     r = await self.client._req('GET', f'/guilds/{self.id}/messages/search', params=params)
     return Messages(Message(m[0], self.client) for m in r.json()['messages'])
 
+# %% ../nbs/00_core.ipynb #44642992
+@patch
+async def find_member(self:Guild, name):
+    "Search guild members by name/nick, return first match's user ID or None"
+    data = (await self.client._req( 'GET', f'/guilds/{self.id}/members/search',
+                                    params={'query': name, 'limit': 1})).json()
+    return data[0]['user']['id'] if data else None
+
+# %% ../nbs/00_core.ipynb #eeaf8a6f
+@patch(as_prop=True)
+async def members(self:Guild):
+    "List all guild members' display names (nick > global_name > username)"
+    data = (await self.client._req('GET', f'/guilds/{self.id}/members', params={'limit': 1000})).json()
+    return [m.get('nick') or m['user'].get('global_name') or m['user']['username'] for m in data]
+
 # %% ../nbs/00_core.ipynb #3fd1132c
 @patch
 async def send(self:Channel, content='', files=None):
