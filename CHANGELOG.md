@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.6
+
+### New Features
+
+- Add member search and listing methods to Guild ([#5](https://github.com/AnswerDotAI/cordslite/pull/5)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.5
 
 ### New Features
