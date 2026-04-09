@@ -213,19 +213,15 @@ async def members(self:Guild, limit=100):
     data = (await self.client._req('GET', f'/guilds/{self.id}/members', params={'limit': limit})).json()
     return Members(Member(d, self.client) for d in data)
 
-# %% ../nbs/00_core.ipynb #7f1f8399
+# %% ../nbs/00_core.ipynb #a301c00c
 class GatewayClient:
     def __init__(self, intents, client, token=None):
-        self.intents = intents
-        self.dc = client
+        self.intents,self.dc = intents,client
         self.token = token or os.environ['DISCORD_BOT_TOKEN']
-        self.ws = None
-        self.hb_int = None
-        self.session_id = None
-        self.seq = None
+        self.ws = self.hb_int = self.session_id = self.seq = None
         self.running = False
-        gw_info = httpx.get('https://discord.com/api/v10/gateway/bot',
-                            headers={'Authorization': f'Bot {self.token}'}).json()
+        gw_info = httpx.get(f'{client.base_url}/gateway/bot', headers={'Authorization': f'Bot {self.token}'}).json()
+        if 'url' not in gw_info: raise ConnectionError(f"Gateway auth failed: {gw_info.get('message', gw_info)}")
         self.url = f"{gw_info['url']}?v=10&encoding=json"
     def __repr__(self): return f"GatewayClient({self.intents=}, {self.url=})"
 
@@ -236,6 +232,8 @@ class Op(AttrDict):
     def identify(cls, token, intents): return cls(op=2, d=AttrDict(token=token, intents=intents, properties=dict(os='linux', browser='discord_wrapper', device='discord_wrapper')))
     @classmethod
     def heartbeat(cls, seq): return cls(op=1, d=seq)
+    @classmethod
+    def resume(cls, token, session_id, seq): return cls(op=6, d=AttrDict(token=token, session_id=session_id, seq=seq))
 
 # %% ../nbs/00_core.ipynb #6932c93e
 evt_typs = {'MESSAGE_CREATE': Message,
@@ -271,6 +269,7 @@ async def _connect(self:GatewayClient):
     await self.ws.send(Op.identify(self.token, self.intents))
     rdy = Event(json.loads(await self.ws.recv()), self.dc)
     self.session_id, self.user_id, self.seq = rdy.d['session_id'], rdy.d['user']['id'], rdy.seq
+    self.resume_url = rdy.d.get('resume_gateway_url', self.url)
     print(f"Connected! Session: {self.session_id}, heartbeat: {self.hb_int}ms")
     return rdy
 
@@ -285,8 +284,15 @@ async def recv_evt(self:GatewayClient):
 @patch
 async def _listen(self:GatewayClient):
     while self.running:
-        evt = await self.recv_evt()
-        if evt.op == 0 and evt.type in getattr(self, 'handlers', {}):
+        try: evt = await self.recv_evt()
+        except Exception as e:
+            print(f"Listen error: {e}")
+            if self.running: await self._reconnect()
+            return
+        if evt.op == 11: self._got_ack = True
+        elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
+        elif evt.op == 7: await self._reconnect()
+        elif evt.op == 0 and evt.type in getattr(self, 'handlers', {}):
             asyncio.create_task(self.handlers[evt.type](evt.d))
 
 @patch
@@ -296,10 +302,28 @@ def on(self:GatewayClient, event_type, handler):
 
 # %% ../nbs/00_core.ipynb #3a138dab
 @patch
+async def _reconnect(self:GatewayClient):
+    print("Reconnecting...")
+    if self.ws: await self.ws.close()
+    self.ws = await websockets.connect(self.resume_url)
+    hello = json.loads(await self.ws.recv())
+    self.hb_int = hello['d']['heartbeat_interval']
+    await self.ws.send(Op.resume(self.token, self.session_id, self.seq))
+    self._got_ack = True
+    if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
+    self._hb_task = asyncio.create_task(self._hb())
+    print(f"Resumed session {self.session_id}")
+
+@patch
 async def _hb(self:GatewayClient):
     await asyncio.sleep(self.hb_int / 1_000 * random.random())
     while self.running:
-        await self.ws.send(Op.heartbeat(self.seq))
+        if hasattr(self, '_got_ack') and not self._got_ack:
+            print("Missed heartbeat ACK — reconnecting...")
+            return await self._reconnect()
+        self._got_ack = False
+        try: await self.ws.send(Op.heartbeat(self.seq))
+        except Exception as e: return print(f"Heartbeat send error: {e}")
         await asyncio.sleep(self.hb_int / 1_000)
 
 # %% ../nbs/00_core.ipynb #4afce159
