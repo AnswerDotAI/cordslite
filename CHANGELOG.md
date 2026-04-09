@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.7
+
+### New Features
+
+- Add reconnection support to GatewayClient ([#6](https://github.com/AnswerDotAI/cordslite/pull/6)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.6
 
 ### New Features
