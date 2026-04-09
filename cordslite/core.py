@@ -156,12 +156,13 @@ async def members(self:Guild):
 
 # %% ../nbs/00_core.ipynb #3fd1132c
 @patch
-async def send(self:Channel, content='', files=None):
+async def send(self:Channel, content='', files=None, reply_id=None):
     "Send a message with optional file attachments"
     path = f'/channels/{self.id}/messages'
-    if not files: r = await self.client._req('POST', path, json={'content': content})
+    payload = dict(content=content)
+    if reply_id: payload['message_reference'] = {'message_id': reply_id}
+    if not files: r = await self.client._req('POST', path, json=payload)
     else:
-        payload = dict(content=content)
         fs = [('files[%d]' % i, (f.name, f.read_bytes(), None))
               for i,f in enumerate([Path(f) for f in listify(files)])]
         r = await self.client._req('POST', path, data={'payload_json': json.dumps(payload)}, files=fs)
