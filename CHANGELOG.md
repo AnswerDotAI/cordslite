@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.8
+
+### New Features
+
+- Add reply support to Channel.send() ([#7](https://github.com/AnswerDotAI/cordslite/pull/7)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.7
 
 ### New Features
