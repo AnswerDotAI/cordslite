@@ -260,20 +260,6 @@ async def send(self:websockets.asyncio.client.ClientConnection, msg, **kw):
     if isinstance(msg, dict): msg = json.dumps(msg)
     return await self._orig_send(msg, **kw)
 
-# %% ../nbs/00_core.ipynb #130c739c
-@patch
-async def _connect(self:GatewayClient):
-    if self.ws: await self.ws.close()
-    self.ws = await websockets.connect(self.url)
-    hello = json.loads(await self.ws.recv())
-    self.hb_int = hello['d']['heartbeat_interval']
-    await self.ws.send(Op.identify(self.token, self.intents))
-    rdy = Event(json.loads(await self.ws.recv()), self.dc)
-    self.session_id, self.user_id, self.seq = rdy.d['session_id'], rdy.d['user']['id'], rdy.seq
-    self.resume_url = rdy.d.get('resume_gateway_url', self.url)
-    print(f"Connected! Session: {self.session_id}, heartbeat: {self.hb_int}ms")
-    return rdy
-
 # %% ../nbs/00_core.ipynb #b55577b6
 @patch
 async def recv_evt(self:GatewayClient):
@@ -281,69 +267,58 @@ async def recv_evt(self:GatewayClient):
     if evt.op == 0 and evt.seq: self.seq = evt.seq
     return evt
 
-# %% ../nbs/00_core.ipynb #a5c9a6aa
-@patch
-async def _listen(self:GatewayClient):
-    while self.running:
-        try: evt = await self.recv_evt()
-        except Exception as e:
-            print(f"Listen error: {e}")
-            if self.running: await self._reconnect()
-            return
-        if evt.op == 11: self._got_ack = True
-        elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
-        elif evt.op == 7: await self._reconnect()
-        elif evt.op == 0 and evt.type in getattr(self, 'handlers', {}):
-            asyncio.create_task(self.handlers[evt.type](evt.d))
-
+# %% ../nbs/00_core.ipynb #ce969a6d
 @patch
 def on(self:GatewayClient, event_type, handler):
     if not hasattr(self, 'handlers'): self.handlers = {}
     self.handlers[event_type] = handler
 
-# %% ../nbs/00_core.ipynb #3a138dab
 @patch
-async def _reconnect(self:GatewayClient):
-    print("Reconnecting...")
-    if self.ws: await self.ws.close()
-    self.ws = await websockets.connect(self.resume_url)
-    hello = json.loads(await self.ws.recv())
-    self.hb_int = hello['d']['heartbeat_interval']
-    await self.ws.send(Op.resume(self.token, self.session_id, self.seq))
-    self._got_ack = True
-    if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
-    self._hb_task = asyncio.create_task(self._hb())
-    print(f"Resumed session {self.session_id}")
+async def on_rdy(self:GatewayClient, evt):
+    self.session_id, self.user_id, = evt['session_id'], evt['user']['id']
+    self.resume_url = evt.get('resume_gateway_url', self.url) + '?v=10&encoding=json'
+gc.on('READY', gc.on_rdy)
 
+# %% ../nbs/00_core.ipynb #fe369f1b
 @patch
 async def _hb(self:GatewayClient):
-    await asyncio.sleep(self.hb_int / 1_000 * random.random())
+    await asyncio.sleep(self.hb_int / 1_000 * random.random()) # jitter
     while self.running:
-        if hasattr(self, '_got_ack') and not self._got_ack:
-            print("Missed heartbeat ACK — reconnecting...")
-            return await self._reconnect()
         self._got_ack = False
-        try: await self.ws.send(Op.heartbeat(self.seq))
-        except Exception as e: return print(f"Heartbeat send error: {e}")
+        await self.ws.send(Op.heartbeat(self.seq))
         await asyncio.sleep(self.hb_int / 1_000)
+        if not self._got_ack: return await self.ws.close(code=4000)
 
-# %% ../nbs/00_core.ipynb #4afce159
 @patch
-async def start(self:GatewayClient):
-    await self._connect()
-    self.running = True
-    self._hb_task = asyncio.create_task(self._hb())
-    self._listen_task = asyncio.create_task(self._listen())
-    print("Gateway started!")
+async def _reconnect(self:GatewayClient):
+    await self.ws.close(code=4000)
+    self.ws = await websockets.connect(self.resume_url)
 
-# %% ../nbs/00_core.ipynb #4be0379b
+@patch
+async def _listen(self:GatewayClient):
+    while self.running:
+        try: evt = await self.recv_evt()
+        except:
+            await self._reconnect()
+            continue
+        if evt.op == 10:
+            self.hb_int = evt.d['heartbeat_interval']
+            if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
+            self._hb_task = asyncio.create_task(self._hb())
+            if hasattr(self, 'resume_url'): await self.ws.send(Op.resume(self.token, self.session_id, self.seq))
+            else: await self.ws.send(Op.identify(self.token, self.intents))
+        elif evt.op == 0 and evt.type in self.handlers: asyncio.create_task(self.handlers[evt.type](evt.d))
+        elif evt.op == 11: self._got_ack = True
+        elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
+        elif evt.op == 7: await self._reconnect()
+
+# %% ../nbs/00_core.ipynb #bef72576
 @patch
 async def stop(self:GatewayClient):
     self.running = False
     for t in (self._hb_task, self._listen_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
-    print("Gateway stopped!")
 
 # %% ../nbs/00_core.ipynb #9643482d
 class VoiceClient:
