@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.9
+
+
+### Bugs Squashed
+
+- Fix WebSocket resume logic and simplify connection lifecycle ([#8](https://github.com/AnswerDotAI/cordslite/pull/8)), thanks to [@ncoop57](https://github.com/ncoop57)
+
 ## 0.0.8
 
 ### New Features
