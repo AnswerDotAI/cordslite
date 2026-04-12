@@ -224,6 +224,11 @@ class GatewayClient:
         gw_info = httpx.get(f'{client.base_url}/gateway/bot', headers={'Authorization': f'Bot {self.token}'}).json()
         if 'url' not in gw_info: raise ConnectionError(f"Gateway auth failed: {gw_info.get('message', gw_info)}")
         self.url = f"{gw_info['url']}?v=10&encoding=json"
+        self.handlers = {'READY': self.on_rdy}
+    
+    async def on_rdy(self, evt):
+        self.session_id, self.user_id, = evt['session_id'], evt['user']['id']
+        self.resume_url = evt.get('resume_gateway_url', self.url) + '?v=10&encoding=json'
     def __repr__(self): return f"GatewayClient({self.intents=}, {self.url=})"
 
 # %% ../nbs/00_core.ipynb #bcdec263
@@ -269,15 +274,7 @@ async def recv_evt(self:GatewayClient):
 
 # %% ../nbs/00_core.ipynb #ce969a6d
 @patch
-def on(self:GatewayClient, event_type, handler):
-    if not hasattr(self, 'handlers'): self.handlers = {}
-    self.handlers[event_type] = handler
-
-@patch
-async def on_rdy(self:GatewayClient, evt):
-    self.session_id, self.user_id, = evt['session_id'], evt['user']['id']
-    self.resume_url = evt.get('resume_gateway_url', self.url) + '?v=10&encoding=json'
-gc.on('READY', gc.on_rdy)
+def on(self:GatewayClient, event_type, handler): self.handlers[event_type] = handler
 
 # %% ../nbs/00_core.ipynb #fe369f1b
 @patch
