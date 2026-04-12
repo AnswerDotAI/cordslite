@@ -312,6 +312,13 @@ async def _listen(self:GatewayClient):
         elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
         elif evt.op == 7: await self._reconnect()
 
+# %% ../nbs/00_core.ipynb #13b642d7
+@patch
+async def start(self:GatewayClient):
+    self.running = True
+    self.ws = await websockets.connect(self.url)
+    self._listen_task = asyncio.create_task(self._listen())
+
 # %% ../nbs/00_core.ipynb #bef72576
 @patch
 async def stop(self:GatewayClient):
