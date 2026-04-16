@@ -359,45 +359,55 @@ async def recv_evt(self:GatewayClient):
 @patch
 def on(self:GatewayClient, event_type, handler): self.handlers[event_type] = handler
 
-# %% ../nbs/00_core.ipynb #fe369f1b
+# %% ../nbs/00_core.ipynb #860cc190
 @patch
 async def _hb(self:GatewayClient):
     await asyncio.sleep(self.hb_int / 1_000 * random.random()) # jitter
     while self.running:
         self._got_ack = False
-        await self.ws.send(Op.heartbeat(self.seq))
+        try: await self.ws.send(Op.heartbeat(self.seq))
+        except Exception: return
         await asyncio.sleep(self.hb_int / 1_000)
         if not self._got_ack: return await self.ws.close(code=4000)
 
-# %% ../nbs/00_core.ipynb #89929987
+# %% ../nbs/00_core.ipynb #86329193
 @patch
-async def _reconnect(self:GatewayClient):
-    await self.ws.close(code=4000)
-    self.ws = await websockets.connect(self.resume_url)
+async def _reconnect(self:GatewayClient, resume=False):
+    code, url = 4000, self.resume_url
+    if not resume:
+        code, url = 1000, self.url
+        self.session_id = None
+    await self.ws.close(code=code)
+    await asyncio.sleep(2)
+    self.ws = await websockets.connect(url)
 
-# %% ../nbs/00_core.ipynb #9fc42e1a
+# %% ../nbs/00_core.ipynb #e7c93acc
 @patch
 async def _listen(self:GatewayClient):
     while self.running:
-        try: evt = await self.recv_evt()
+        try:
+            evt = await self.recv_evt()
+            if self.debug: print('DEBUG: Received Opcode:', evt.op)
+            if evt.op == 10:
+                self.hb_int = evt.d['heartbeat_interval']
+                if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
+                self._hb_task = asyncio.create_task(self._hb())
+                if self.session_id: await self.ws.send(Op.resume(self.token, self.session_id, self.seq))
+                else: await self.ws.send(Op.identify(self.token, self.intents))
+            elif evt.op == 0 and evt.type in self.handlers: asyncio.create_task(self.handlers[evt.type](evt.d))
+            elif evt.op == 11: self._got_ack = True
+            elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
+            elif evt.op == 7: await self._reconnect()
+            elif evt.op == 9: await self._reconnect(resume=evt.d)
         except Exception as e:
             print(e)
             await self._reconnect()
             continue
-        if evt.op == 10:
-            self.hb_int = evt.d['heartbeat_interval']
-            if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
-            self._hb_task = asyncio.create_task(self._hb())
-            if hasattr(self, 'resume_url'): await self.ws.send(Op.resume(self.token, self.session_id, self.seq))
-            else: await self.ws.send(Op.identify(self.token, self.intents))
-        elif evt.op == 0 and evt.type in self.handlers: asyncio.create_task(self.handlers[evt.type](evt.d))
-        elif evt.op == 11: self._got_ack = True
-        elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
-        elif evt.op == 7: await self._reconnect()
 
-# %% ../nbs/00_core.ipynb #13b642d7
+# %% ../nbs/00_core.ipynb #d23c0788
 @patch
-async def start(self:GatewayClient):
+async def start(self:GatewayClient, debug=False):
+    self.debug = debug
     self.running = True
     self.ws = await websockets.connect(self.url)
     self._listen_task = asyncio.create_task(self._listen())
