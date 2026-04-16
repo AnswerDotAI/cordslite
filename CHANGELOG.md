@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.12
+
+### New Features
+
+- Improve WebSocket reconnection handling ([#12](https://github.com/AnswerDotAI/cordslite/pull/12)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.11
 
 ### New Features
