@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>cordslite API – cordslite</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-de52dc3353fe04aa4d07820b7139bd46.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="cordslite API – cordslite">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="cordslite">
+<meta name="twitter:title" content="cordslite API – cordslite">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">cordslite</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">cordslite API</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">cordslite 🍺</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">cordslite API</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#failed-to-import-opuslib-next" id="toc-failed-to-import-opuslib-next" class="nav-link active" data-scroll-target="#failed-to-import-opuslib-next">Failed to import opuslib-next</a>
+  <ul class="collapse">
+  <li><a href="#discordclient" id="toc-discordclient" class="nav-link" data-scroll-target="#discordclient">DiscordClient</a></li>
+  </ul></li>
+  <li><a href="#rest-endpoints" id="toc-rest-endpoints" class="nav-link" data-scroll-target="#rest-endpoints">REST endpoints</a>
+  <ul class="collapse">
+  <li><a href="#discorderror" id="toc-discorderror" class="nav-link" data-scroll-target="#discorderror">DiscordError</a></li>
+  <li><a href="#discordobject" id="toc-discordobject" class="nav-link" data-scroll-target="#discordobject">DiscordObject</a></li>
+  <li><a href="#guild" id="toc-guild" class="nav-link" data-scroll-target="#guild">Guild</a></li>
+  <li><a href="#discordclient.guild" id="toc-discordclient.guild" class="nav-link" data-scroll-target="#discordclient.guild">DiscordClient.guild</a></li>
+  <li><a href="#html_table" id="toc-html_table" class="nav-link" data-scroll-target="#html_table">html_table</a></li>
+  <li><a href="#channels" id="toc-channels" class="nav-link" data-scroll-target="#channels">Channels</a></li>
+  <li><a href="#channel" id="toc-channel" class="nav-link" data-scroll-target="#channel">Channel</a></li>
+  <li><a href="#guild.channels" id="toc-guild.channels" class="nav-link" data-scroll-target="#guild.channels">Guild.channels</a></li>
+  <li><a href="#discordclient.channel" id="toc-discordclient.channel" class="nav-link" data-scroll-target="#discordclient.channel">DiscordClient.channel</a></li>
+  <li><a href="#message" id="toc-message" class="nav-link" data-scroll-target="#message">Message</a></li>
+  <li><a href="#messages" id="toc-messages" class="nav-link" data-scroll-target="#messages">Messages</a></li>
+  <li><a href="#channel.messages" id="toc-channel.messages" class="nav-link" data-scroll-target="#channel.messages">Channel.messages</a></li>
+  <li><a href="#guild.search" id="toc-guild.search" class="nav-link" data-scroll-target="#guild.search">Guild.search</a></li>
+  <li><a href="#date2snowflake" id="toc-date2snowflake" class="nav-link" data-scroll-target="#date2snowflake">date2snowflake</a></li>
+  <li><a href="#guild.find_member" id="toc-guild.find_member" class="nav-link" data-scroll-target="#guild.find_member">Guild.find_member</a></li>
+  <li><a href="#guild.members" id="toc-guild.members" class="nav-link" data-scroll-target="#guild.members">Guild.members</a></li>
+  <li><a href="#channel.send" id="toc-channel.send" class="nav-link" data-scroll-target="#channel.send">Channel.send</a></li>
+  <li><a href="#channel.search" id="toc-channel.search" class="nav-link" data-scroll-target="#channel.search">Channel.search</a></li>
+  <li><a href="#message.attachments" id="toc-message.attachments" class="nav-link" data-scroll-target="#message.attachments">Message.attachments</a></li>
+  <li><a href="#attachment" id="toc-attachment" class="nav-link" data-scroll-target="#attachment">Attachment</a></li>
+  <li><a href="#discordclient.create_dm" id="toc-discordclient.create_dm" class="nav-link" data-scroll-target="#discordclient.create_dm">DiscordClient.create_dm</a></li>
+  <li><a href="#guild.members-1" id="toc-guild.members-1" class="nav-link" data-scroll-target="#guild.members-1">Guild.members</a></li>
+  <li><a href="#members" id="toc-members" class="nav-link" data-scroll-target="#members">Members</a></li>
+  <li><a href="#member" id="toc-member" class="nav-link" data-scroll-target="#member">Member</a></li>
+  <li><a href="#user" id="toc-user" class="nav-link" data-scroll-target="#user">User</a></li>
+  <li><a href="#channel.search_all" id="toc-channel.search_all" class="nav-link" data-scroll-target="#channel.search_all">Channel.search_all</a></li>
+  <li><a href="#guild.search_all" id="toc-guild.search_all" class="nav-link" data-scroll-target="#guild.search_all">Guild.search_all</a></li>
+  <li><a href="#channel.bulk_delete" id="toc-channel.bulk_delete" class="nav-link" data-scroll-target="#channel.bulk_delete">Channel.bulk_delete</a></li>
+  <li><a href="#channel.delete_message" id="toc-channel.delete_message" class="nav-link" data-scroll-target="#channel.delete_message">Channel.delete_message</a></li>
+  <li><a href="#message.delete" id="toc-message.delete" class="nav-link" data-scroll-target="#message.delete">Message.delete</a></li>
+  <li><a href="#discordclient.thread" id="toc-discordclient.thread" class="nav-link" data-scroll-target="#discordclient.thread">DiscordClient.thread</a></li>
+  <li><a href="#message.create_thread" id="toc-message.create_thread" class="nav-link" data-scroll-target="#message.create_thread">Message.create_thread</a></li>
+  <li><a href="#channel.search_and_delete_all" id="toc-channel.search_and_delete_all" class="nav-link" data-scroll-target="#channel.search_and_delete_all">Channel.search_and_delete_all</a></li>
+  </ul></li>
+  <li><a href="#gateway-api" id="toc-gateway-api" class="nav-link" data-scroll-target="#gateway-api">Gateway API</a>
+  <ul class="collapse">
+  <li><a href="#gatewayclient" id="toc-gatewayclient" class="nav-link" data-scroll-target="#gatewayclient">GatewayClient</a></li>
+  <li><a href="#op" id="toc-op" class="nav-link" data-scroll-target="#op">Op</a></li>
+  <li><a href="#event" id="toc-event" class="nav-link" data-scroll-target="#event">Event</a></li>
+  <li><a href="#clientconnection.send" id="toc-clientconnection.send" class="nav-link" data-scroll-target="#clientconnection.send">ClientConnection.send</a></li>
+  <li><a href="#gatewayclient.recv_evt" id="toc-gatewayclient.recv_evt" class="nav-link" data-scroll-target="#gatewayclient.recv_evt">GatewayClient.recv_evt</a></li>
+  <li><a href="#gatewayclient.on" id="toc-gatewayclient.on" class="nav-link" data-scroll-target="#gatewayclient.on">GatewayClient.on</a></li>
+  <li><a href="#gatewayclient.start" id="toc-gatewayclient.start" class="nav-link" data-scroll-target="#gatewayclient.start">GatewayClient.start</a></li>
+  <li><a href="#gatewayclient.stop" id="toc-gatewayclient.stop" class="nav-link" data-scroll-target="#gatewayclient.stop">GatewayClient.stop</a></li>
+  </ul></li>
+  <li><a href="#voice-api" id="toc-voice-api" class="nav-link" data-scroll-target="#voice-api">Voice API</a>
+  <ul class="collapse">
+  <li><a href="#voiceclient" id="toc-voiceclient" class="nav-link" data-scroll-target="#voiceclient">VoiceClient</a></li>
+  <li><a href="#op.voice_heartbeat" id="toc-op.voice_heartbeat" class="nav-link" data-scroll-target="#op.voice_heartbeat">Op.voice_heartbeat</a></li>
+  <li><a href="#op.speaking" id="toc-op.speaking" class="nav-link" data-scroll-target="#op.speaking">Op.speaking</a></li>
+  <li><a href="#op.select_protocol" id="toc-op.select_protocol" class="nav-link" data-scroll-target="#op.select_protocol">Op.select_protocol</a></li>
+  <li><a href="#op.voice_identify" id="toc-op.voice_identify" class="nav-link" data-scroll-target="#op.voice_identify">Op.voice_identify</a></li>
+  <li><a href="#op.voice_state" id="toc-op.voice_state" class="nav-link" data-scroll-target="#op.voice_state">Op.voice_state</a></li>
+  <li><a href="#get_ip" id="toc-get_ip" class="nav-link" data-scroll-target="#get_ip">get_ip</a></li>
+  <li><a href="#voiceudp" id="toc-voiceudp" class="nav-link" data-scroll-target="#voiceudp">VoiceUDP</a></li>
+  <li><a href="#voiceclient.join" id="toc-voiceclient.join" class="nav-link" data-scroll-target="#voiceclient.join">VoiceClient.join</a></li>
+  <li><a href="#decrypt_pkt" id="toc-decrypt_pkt" class="nav-link" data-scroll-target="#decrypt_pkt">decrypt_pkt</a></li>
+  <li><a href="#silence" id="toc-silence" class="nav-link" data-scroll-target="#silence">silence</a></li>
+  <li><a href="#voiceclient.stop_recording" id="toc-voiceclient.stop_recording" class="nav-link" data-scroll-target="#voiceclient.stop_recording">VoiceClient.stop_recording</a></li>
+  <li><a href="#voiceclient.start_recording" id="toc-voiceclient.start_recording" class="nav-link" data-scroll-target="#voiceclient.start_recording">VoiceClient.start_recording</a></li>
+  <li><a href="#voiceclient.leave" id="toc-voiceclient.leave" class="nav-link" data-scroll-target="#voiceclient.leave">VoiceClient.leave</a></li>
+  </ul></li>
+  <li><a href="#bots" id="toc-bots" class="nav-link" data-scroll-target="#bots">Bots</a>
+  <ul class="collapse">
+  <li><a href="#bot" id="toc-bot" class="nav-link" data-scroll-target="#bot">Bot</a></li>
+  <li><a href="#bot.on_error" id="toc-bot.on_error" class="nav-link" data-scroll-target="#bot.on_error">Bot.on_error</a></li>
+  <li><a href="#bot.leave_voice" id="toc-bot.leave_voice" class="nav-link" data-scroll-target="#bot.leave_voice">Bot.leave_voice</a></li>
+  <li><a href="#bot.join_voice" id="toc-bot.join_voice" class="nav-link" data-scroll-target="#bot.join_voice">Bot.join_voice</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/AnswerDotAI/cordslite/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="core.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">cordslite API</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div id="d8ebb8ee" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Audio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Discord has three main APIs: - <strong>REST API</strong> - for actions (send message, get channels, fetch history). Request/response style. - <strong>Gateway API</strong> - for real-time events via WebSocket (new messages, reactions, user joins). - <strong>Voice API</strong> - for real-time streaming of audio via UDP</p>
+<p>We start with the REST API. To use it, you need a <strong>bot token</strong> from the <a href="https://discord.com/developers/applications">Discord Developer Portal</a>: 1. Create an application 2. Go to “Bot” section and create a bot 3. Copy the token (keep it secret!) 4. Under “OAuth2 → URL Generator”, select <code>bot</code> scope and choose permissions (e.g., <code>Send Messages</code>, <code>Read Message History</code>) 5. Use the generated URL to invite the bot to your server</p>
+<p>The <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordclient"><code>DiscordClient</code></a> wraps <code>httpx.Client</code> with Discord’s base URL (<code>https://discord.com/api/v10</code>) and auth headers pre-configured.</p>
+<section id="failed-to-import-opuslib-next" class="level2">
+<h2 class="anchored" data-anchor-id="failed-to-import-opuslib-next">Failed to import opuslib-next</h2>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L21" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="discordclient" class="level3">
+<h3 class="anchored" data-anchor-id="discordclient">DiscordClient</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> DiscordClient(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    token:NoneType<span class="op">=</span><span class="va">None</span>, user_token:NoneType<span class="op">=</span><span class="va">None</span>, name:<span class="bu">str</span><span class="op">=</span><span class="st">'cordslite'</span>, ver:<span class="bu">str</span><span class="op">=</span><span class="st">'0.1'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
+<p>The token defaults to the <code>DISCORD_BOT_TOKEN</code> environment variable—no hardcoding secrets!</p>
+<div id="55df80ed" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dc <span class="op">=</span> DiscordClient()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="rest-endpoints" class="level2">
+<h2 class="anchored" data-anchor-id="rest-endpoints">REST endpoints</h2>
+<p>Every REST call goes through <code>_req</code>, which handles two concerns automatically: - <strong>Rate limiting</strong> — if Discord returns <code>429 Too Many Requests</code>, we wait the <code>Retry-After</code> duration and retry. - <strong>Error handling</strong> — non-2xx responses are raised as <a href="https://AnswerDotAI.github.io/cordslite/core.html#discorderror"><code>DiscordError</code></a> with Discord’s error code, message, and HTTP status, so callers don’t need to check responses manually.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L31" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="discorderror" class="level3">
+<h3 class="anchored" data-anchor-id="discorderror">DiscordError</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> DiscordError(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    code, msg, status</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Common base class for all non-exit exceptions.</em></p>
+<p>Discord’s REST endpoints return JSON with many fields. Rather than defining properties for every field, we use a flexible base class pattern:</p>
+<p><a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a> provides <code>__getitem__</code> and <code>__getattr__</code> so you can access data as <code>obj.name</code> or <code>obj['name']</code>. The <code>__dir__</code> method enables autocomplete in notebooks and solveit dialogs—just type <code>obj.</code> and see all available fields!</p>
+<p>This means when Discord adds new fields to their API, our code automatically supports them without changes.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L56" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="discordobject" class="level3">
+<h3 class="anchored" data-anchor-id="discordobject">DiscordObject</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> DiscordObject(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<p>Discord’s hierarchy is <strong>Guild → Channels → Messages</strong>. A Guild (server) contains channels, and channels contain messages. Each has its own REST endpoints: - <code>GET /guilds/{id}</code> - fetch guild info - <code>GET /guilds/{id}/channels</code> - list channels - <code>GET /channels/{id}/messages</code> - fetch messages - <code>POST /channels/{id}/messages</code> - send a message</p>
+<p>We build wrapper classes for each, inheriting from <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a> and just adding a nice <code>__repr__</code>.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L66" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild" class="level3">
+<h3 class="anchored" data-anchor-id="guild">Guild</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Guild(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<p>We use <code>@patch</code> from fastcore to add methods incrementally—great for interactive development where you want to test each piece as you build it. This <code>guild</code> method fetches guild data and wraps it in our <a href="https://AnswerDotAI.github.io/cordslite/core.html#guild"><code>Guild</code></a> class.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L71" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="discordclient.guild" class="level3">
+<h3 class="anchored" data-anchor-id="discordclient.guild">DiscordClient.guild</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> guild(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    guild_id</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="be1b9822" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gid = '1493461895615873044'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gid <span class="op">=</span> <span class="st">'1327046393453613076'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>gld <span class="op">=</span> <span class="cf">await</span> dc.guild(gid)<span class="op">;</span> gld</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Guild(<span class="bu">id</span><span class="op">=</span><span class="dv">1327046393453613076</span>, name<span class="op">=</span><span class="st">"natedog's server"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Channels have a <code>type</code> field: 0=text, 2=voice, 4=category. The <a href="https://AnswerDotAI.github.io/cordslite/core.html#channels"><code>Channels</code></a> class inherits from <code>list</code> and adds <code>_repr_html_</code> for nice table display in notebooks/solveit. This pattern—a wrapper class plus a collection class with HTML repr—makes exploring the API much more pleasant.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L75" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="html_table" class="level3">
+<h3 class="anchored" data-anchor-id="html_table">html_table</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> html_table(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    items, hdrs, fn</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L88" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channels" class="level3">
+<h3 class="anchored" data-anchor-id="channels">Channels</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Channels(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Built-in mutable sequence.</em></p>
+<p>If no argument is given, the constructor creates a new empty list. The argument must be an iterable if specified.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L81" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel" class="level3">
+<h3 class="anchored" data-anchor-id="channel">Channel</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Channel(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L93" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.channels" class="level3">
+<h3 class="anchored" data-anchor-id="guild.channels">Guild.channels</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> channels(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    limit:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="72d0c235" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>chs <span class="op">=</span> <span class="cf">await</span> gld.channels(<span class="dv">5</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>chs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1327046393453613077</td>
+<td>Text Channels</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>1327046393453613078</td>
+<td>Voice Channels</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>1327046393453613079</td>
+<td>general</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1327046393453613080</td>
+<td>General</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>1327954661960978512</td>
+<td>private</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L100" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="discordclient.channel" class="level3">
+<h3 class="anchored" data-anchor-id="discordclient.channel">DiscordClient.channel</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> channel(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    channel_id</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="7f0e4b3e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>chid <span class="op">=</span> <span class="st">'1327046393453613079'</span> <span class="co"># '1493461896139903028'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="e1a48f7b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ch <span class="op">=</span> <span class="cf">await</span> dc.channel(chid)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Channel(<span class="bu">id</span><span class="op">=</span><span class="dv">1327046393453613079</span>, name<span class="op">=</span><span class="st">'general'</span>, <span class="bu">type</span><span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Messages are the core of most bot functionality. Note that Discord returns messages in reverse chronological order (newest first), so we <code>reverse()</code> the data to get chronological order. The table shows a preview of content, author, and timestamp.</p>
+<p>Note: To read message content, your bot needs the <code>MESSAGE_CONTENT</code> privileged intent enabled in the Developer Portal! Without it, the <code>content</code> field will be empty for messages not sent by your bot or mentioning it.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L104" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="message" class="level3">
+<h3 class="anchored" data-anchor-id="message">Message</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Message(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    data, dobj</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L123" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="messages" class="level3">
+<h3 class="anchored" data-anchor-id="messages">Messages</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Messages(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Built-in mutable sequence.</em></p>
+<p>If no argument is given, the constructor creates a new empty list. The argument must be an iterable if specified.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L130" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.messages" class="level3">
+<h3 class="anchored" data-anchor-id="channel.messages">Channel.messages</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> messages(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    limit:<span class="bu">int</span><span class="op">=</span><span class="dv">50</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="4c84a74c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>msgs <span class="op">=</span> <span class="cf">await</span> ch.messages(<span class="dv">5</span>)<span class="op">;</span> msgs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1494381457928618014</td>
+<td>DBuddy</td>
+<td>I'm replying to myself 🤓</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="even">
+<td>1494381464177999893</td>
+<td>DBuddy</td>
+<td>Here is a file!</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="odd">
+<td>1494381474240270511</td>
+<td>DBuddy</td>
+<td>Test our event listener! Otters are awesome 🦦</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="even">
+<td>1494381547586064515</td>
+<td>DBuddy</td>
+<td>Houston, do we have a problem?</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="odd">
+<td>1494381604842504372</td>
+<td>DBuddy</td>
+<td>Did we re-identify?</td>
+<td>2026-04-16</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Guild search uses snowflake IDs for date filtering (<code>min_id</code>/<code>max_id</code>), but we autoconvert <code>'YYYY-MM-DD'</code> strings for convenience for <code>before/after</code>.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L142" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.search" class="level3">
+<h3 class="anchored" data-anchor-id="guild.search">Guild.search</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    content:NoneType<span class="op">=</span><span class="va">None</span>, author_id:NoneType<span class="op">=</span><span class="va">None</span>, channel_id:NoneType<span class="op">=</span><span class="va">None</span>, mentions:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    has:NoneType<span class="op">=</span><span class="va">None</span>, before:NoneType<span class="op">=</span><span class="va">None</span>, after:NoneType<span class="op">=</span><span class="va">None</span>, pinned:NoneType<span class="op">=</span><span class="va">None</span>, sort_by:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    sort_order:NoneType<span class="op">=</span><span class="va">None</span>, offset:NoneType<span class="op">=</span><span class="va">None</span>, limit:NoneType<span class="op">=</span><span class="va">None</span>, use_user:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Search guild messages. <code>before</code>/<code>after</code> accept ‘YYYY-MM-DD’ strings or snowflake IDs.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L136" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="date2snowflake" class="level3">
+<h3 class="anchored" data-anchor-id="date2snowflake">date2snowflake</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date2snowflake(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    date_str</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Convert ‘YYYY-MM-DD’ to a Discord snowflake ID</em></p>
+<div id="a9e55153" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gld.search(after<span class="op">=</span><span class="st">'2026-02-16'</span>, limit<span class="op">=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1494381604842504372</td>
+<td>DBuddy</td>
+<td>Did we re-identify?</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="even">
+<td>1494381547586064515</td>
+<td>DBuddy</td>
+<td>Houston, do we have a problem?</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="odd">
+<td>1494381474240270511</td>
+<td>DBuddy</td>
+<td>Test our event listener! Otters are awesome 🦦</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="even">
+<td>1494381464177999893</td>
+<td>DBuddy</td>
+<td>Here is a file!</td>
+<td>2026-04-16</td>
+</tr>
+<tr class="odd">
+<td>1494381457928618014</td>
+<td>DBuddy</td>
+<td>I'm replying to myself 🤓</td>
+<td>2026-04-16</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Sometimes you need to search by name rather than snowflake ID. <code>find_member</code> searches the guild’s members by username, nickname, or display name using Discord’s member search endpoint, and returns the first match’s user ID. This makes it easy to chain into <code>search</code>.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L156" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.find_member" class="level3">
+<h3 class="anchored" data-anchor-id="guild.find_member">Guild.find_member</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> find_member(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Search guild members by name/nick, return first match’s user ID or None</em></p>
+<div id="aafd6bef" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>uid <span class="op">=</span> <span class="cf">await</span> gld.find_member(<span class="st">'jeremyhoward'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> uid</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gld.search(author_id<span class="op">=</span>uid, limit<span class="op">=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The <code>members</code> property fetches all guild members and returns their display names, preferring server nickname over global display name over username. Note: this requires the <strong>Server Members Intent</strong> enabled in the Developer Portal (Bot → Privileged Gateway Intents).</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L215" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.members" class="level3">
+<h3 class="anchored" data-anchor-id="guild.members">Guild.members</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> members(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>List all guild members’ display names (nick &gt; global_name &gt; username)</em></p>
+<div id="cdd2e812" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>(<span class="cf">await</span> gld.members)[:<span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>['nathan', 'SearchBuddy', 'DBuddy', 'Dizcord Util Bot', 'Search Agent']</code></pre>
+</div>
+</div>
+<p>Sending messages is a POST request with JSON body. Pass <code>reply_id</code> to thread a reply under an existing message. For file attachments, we switch to <code>multipart/form-data</code>—Discord expects a <code>payload_json</code> field with the message JSON, plus <code>files[n]</code> fields for each file.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L170" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.send" class="level3">
+<h3 class="anchored" data-anchor-id="channel.send">Channel.send</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> send(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    content:<span class="bu">str</span><span class="op">=</span><span class="st">''</span>, files:NoneType<span class="op">=</span><span class="va">None</span>, reply_id:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Send a message with optional file attachments</em></p>
+<div id="9a511736" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">'Hi, from Solveit!'</span>)<span class="op">;</span> msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383523015164087</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Hi, from Solveit!'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="76672565" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>reply_msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">"I'm replying to myself 🤓"</span>, reply_id<span class="op">=</span>msg.<span class="bu">id</span>)<span class="op">;</span> reply_msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383523946303661</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">"I'm replying to myself 🤓"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="bbc96a49" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> msg.channel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Channel(<span class="bu">id</span><span class="op">=</span><span class="dv">1327046393453613079</span>, name<span class="op">=</span><span class="st">'general'</span>, <span class="bu">type</span><span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="5ff86195" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">'Here is a file!'</span>, files<span class="op">=</span>[<span class="st">'../README.md'</span>])<span class="op">;</span> msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383525539872970</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Here is a file!'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L182" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.search" class="level3">
+<h3 class="anchored" data-anchor-id="channel.search">Channel.search</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    content:NoneType<span class="op">=</span><span class="va">None</span>, author_id:NoneType<span class="op">=</span><span class="va">None</span>, mentions:NoneType<span class="op">=</span><span class="va">None</span>, has:NoneType<span class="op">=</span><span class="va">None</span>, before:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    after:NoneType<span class="op">=</span><span class="va">None</span>, pinned:NoneType<span class="op">=</span><span class="va">None</span>, sort_by:NoneType<span class="op">=</span><span class="va">None</span>, sort_order:NoneType<span class="op">=</span><span class="va">None</span>, offset:NoneType<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    limit:NoneType<span class="op">=</span><span class="va">None</span>, use_user:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="a7aacf59" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> ch.search(has<span class="op">=</span><span class="st">'file'</span>, limit<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1494381464177999893</td>
+<td>DBuddy</td>
+<td>Here is a file!</td>
+<td>2026-04-16</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Discord messages can have file attachments. The <a href="https://AnswerDotAI.github.io/cordslite/core.html#attachment"><code>Attachment</code></a> class wraps them as <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a>s—giving you attribute access to <code>filename</code>, <code>size</code>, <code>content_type</code>, <code>url</code>, etc. The <code>fetch</code> method downloads the file content using the existing httpx client.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L194" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="message.attachments" class="level3">
+<h3 class="anchored" data-anchor-id="message.attachments">Message.attachments</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> attachments(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L185" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="attachment" class="level3">
+<h3 class="anchored" data-anchor-id="attachment">Attachment</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Attachment(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<div id="1881100a" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>atts <span class="op">=</span> msg.attachments<span class="op">;</span> atts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>[Attachment(filename='README.md', size=28163, type=text/markdown; charset=utf-8)]</code></pre>
+</div>
+</div>
+<div id="05be9e74" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>readme <span class="op">=</span> (<span class="cf">await</span> atts[<span class="dv">0</span>].fetch()).decode()</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(readme[:<span class="dv">16</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># cordslite 🍺
+
+
+</code></pre>
+</div>
+</div>
+<p>DMs (Direct Messages) are just regular channels in Discord’s API — no special handling needed! To start a DM conversation, POST to <code>/users/@me/channels</code> with a <code>recipient_id</code>. Discord returns a standard channel object, so <code>send()</code> and <code>messages()</code> work exactly as they do for guild channels.</p>
+<p>To detect DMs in the gateway, check for the absence of <code>guild_id</code> — DM messages don’t belong to any guild, so this field is missing or <code>None</code>. This makes it easy to route DM vs guild messages in your bot’s handler.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L198" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="discordclient.create_dm" class="level3">
+<h3 class="anchored" data-anchor-id="discordclient.create_dm">DiscordClient.create_dm</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> create_dm(</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    user_id</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="d328d811" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Commented out so we don't spam Nate</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dm = await dc.create_dm('346450717025894400')  # nathan's user ID</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># await dm.send('Hello from DMs!')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Members vs Users: A <strong>User</strong> is a global Discord account. A <strong>Member</strong> is a user <em>within a specific guild</em>—it has guild-specific data like nickname, roles, and join date. The <code>nick or user['username']</code> pattern shows the server nickname if set, otherwise falls back to the global username.</p>
+<p>Note: The members endpoint requires the <code>GUILD_MEMBERS</code> privileged intent enabled in your bot settings on the Developer Portal!</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L215" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.members-1" class="level3">
+<h3 class="anchored" data-anchor-id="guild.members-1">Guild.members</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> members(</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    limit:<span class="bu">int</span><span class="op">=</span><span class="dv">100</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L211" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="members" class="level3">
+<h3 class="anchored" data-anchor-id="members">Members</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Members(</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Built-in mutable sequence.</em></p>
+<p>If no argument is given, the constructor creates a new empty list. The argument must be an iterable if specified.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L206" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="member" class="level3">
+<h3 class="anchored" data-anchor-id="member">Member</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Member(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L203" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="user" class="level3">
+<h3 class="anchored" data-anchor-id="user">User</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> User(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<div id="205675b9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>mems <span class="op">=</span> <span class="cf">await</span> gld.members(<span class="dv">5</span>)<span class="op">;</span> mems</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Joined</th>
+<th data-quarto-table-cell-role="th">Roles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>346450717025894400</td>
+<td>nathan</td>
+<td>2025-01-09</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1327047896436178954</td>
+<td>SearchBuddy</td>
+<td>2025-01-09</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>1361823507679543306</td>
+<td>DBuddy</td>
+<td>2025-04-15</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>1448038710229733398</td>
+<td>Dizcord Util Bot</td>
+<td>2025-12-09</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>1467222191182712986</td>
+<td>Search Agent</td>
+<td>2026-01-31</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L239" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.search_all" class="level3">
+<h3 class="anchored" data-anchor-id="channel.search_all">Channel.search_all</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_all(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    limit:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, delay:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>, max_age_days:NoneType<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L221" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="guild.search_all" class="level3">
+<h3 class="anchored" data-anchor-id="guild.search_all">Guild.search_all</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_all(</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    limit:<span class="bu">int</span><span class="op">=</span><span class="dv">500</span>, delay:<span class="bu">float</span><span class="op">=</span><span class="fl">1.0</span>, max_age_days:NoneType<span class="op">=</span><span class="va">None</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, kwargs:VAR_KEYWORD</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Paginated search returning up to <code>limit</code> messages</em></p>
+<div id="37f5848f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># r = await ch.search_all()</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># len(r)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L255" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.bulk_delete" class="level3">
+<h3 class="anchored" data-anchor-id="channel.bulk_delete">Channel.bulk_delete</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> bulk_delete(</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    message_ids</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Bulk delete messages (must be &lt;14 days old)</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L250" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.delete_message" class="level3">
+<h3 class="anchored" data-anchor-id="channel.delete_message">Channel.delete_message</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> delete_message(</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    message_id</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Delete a message by ID</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L245" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="message.delete" class="level3">
+<h3 class="anchored" data-anchor-id="message.delete">Message.delete</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> delete(</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Delete this message</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L267" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="discordclient.thread" class="level3">
+<h3 class="anchored" data-anchor-id="discordclient.thread">DiscordClient.thread</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> thread(</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    thread_id</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Fetch a thread (which is a Channel)</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L261" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="message.create_thread" class="level3">
+<h3 class="anchored" data-anchor-id="message.create_thread">Message.create_thread</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> create_thread(</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Create a thread from this message</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L283" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="channel.search_and_delete_all" class="level3">
+<h3 class="anchored" data-anchor-id="channel.search_and_delete_all">Channel.search_and_delete_all</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_and_delete_all(</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    content, delay:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, show:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, kwargs:VAR_KEYWORD</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Bulk delete recent msgs, individually delete older ones</em></p>
+</section>
+</section>
+<section id="gateway-api" class="level2">
+<h2 class="anchored" data-anchor-id="gateway-api">Gateway API</h2>
+<p>The Gateway is Discord’s WebSocket connection for <strong>real-time events</strong>. Unlike the REST API (request/response), the Gateway pushes events to you as they happen—new messages, reactions, user joins, etc.</p>
+<p>The connection lifecycle is: 1. Fetch WSS URL from <code>/gateway/bot</code> 2. Connect to WebSocket 3. Receive <strong>Hello</strong> event with heartbeat interval 4. Start heartbeat loop to keep connection alive 5. Send <strong>Identify</strong> with your token and intents 6. Receive <strong>Ready</strong> event—you’re connected!</p>
+<p><strong>Intents</strong> tell Discord which events you want. They’re bitwise flags you OR together: - <code>1 &lt;&lt; 0</code> = GUILDS (guild/channel events) - <code>1 &lt;&lt; 9</code> = GUILD_MESSAGES (message events) - <code>1 &lt;&lt; 15</code> = MESSAGE_CONTENT (privileged—see message content)</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L300" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="gatewayclient" class="level3">
+<h3 class="anchored" data-anchor-id="gatewayclient">GatewayClient</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> GatewayClient(</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    intents, client, token:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
+<div id="716c4aed" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For now, let's use basic intents for guilds and messages</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>intents <span class="op">=</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">0</span>) <span class="op">|</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">9</span>) <span class="op">|</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">15</span>)  <span class="co"># GUILDS | GUILD_MESSAGES | MESSAGE_CONTENT</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>gc <span class="op">=</span> GatewayClient(intents, dc)<span class="op">;</span> gc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>GatewayClient(self.intents=33281, self.url='wss://gateway.discord.gg?v=10&amp;encoding=json')</code></pre>
+</div>
+</div>
+<p><a href="https://AnswerDotAI.github.io/cordslite/core.html#op"><code>Op</code></a> is a thin helper for constructing Gateway opcodes. Discord’s Gateway expects JSON payloads with an <code>op</code> field (operation code) and <code>d</code> field (payload data). Rather than hand-building dicts each time, <a href="https://AnswerDotAI.github.io/cordslite/core.html#op.identify"><code>Op.identify()</code></a> and <a href="https://AnswerDotAI.github.io/cordslite/core.html#op.heartbeat"><code>Op.heartbeat()</code></a> return properly structured payloads ready to send over the WebSocket.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L318" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op" class="level3">
+<h3 class="anchored" data-anchor-id="op">Op</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Op(</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<p>The Gateway sends events as JSON with four fields: - <strong><code>op</code></strong> — operation code: <code>0</code> = dispatch (real events), <code>1</code> = heartbeat request, <code>10</code> = hello, <code>11</code> = heartbeat ACK - <strong><code>t</code></strong> — event type name (only for dispatches): <code>MESSAGE_CREATE</code>, <code>GUILD_CREATE</code>, etc. - <strong><code>s</code></strong> — sequence number (only for dispatches): increments per event, needed for heartbeats and resuming - <strong><code>d</code></strong> — the payload data</p>
+<p>We track the latest <code>s</code> value so heartbeats can tell Discord “I’ve received everything up to here.” The <a href="https://AnswerDotAI.github.io/cordslite/core.html#event"><code>Event</code></a> class wraps raw JSON and auto-converts known dispatch types (like <code>MESSAGE_CREATE</code>) into their corresponding wrapper classes (<a href="https://AnswerDotAI.github.io/cordslite/core.html#message"><code>Message</code></a>, <a href="https://AnswerDotAI.github.io/cordslite/core.html#channel"><code>Channel</code></a>, etc.) via <code>evt_typs</code>.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L336" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="event" class="level3">
+<h3 class="anchored" data-anchor-id="event">Event</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Event(</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    data, client</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em><code>dict</code> subclass that also provides access to keys as attrs, and has a pretty markdown repr</em></p>
+<hr>
+</section>
+<section id="clientconnection.send" class="level3">
+<h3 class="anchored" data-anchor-id="clientconnection.send">ClientConnection.send</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> send(</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    msg, kw:VAR_KEYWORD</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p><code>recv_evt</code> is the low-level building block for receiving events. It reads one raw WebSocket message, wraps it as an <a href="https://AnswerDotAI.github.io/cordslite/core.html#event"><code>Event</code></a> (auto-converting known dispatch types), and updates the sequence counter. You can use it directly to pull events one at a time — useful for debugging or understanding what Discord is sending.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L355" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gatewayclient.recv_evt" class="level3">
+<h3 class="anchored" data-anchor-id="gatewayclient.recv_evt">GatewayClient.recv_evt</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> recv_evt(</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p>Rather than special-casing the READY event inside <code>_listen</code>, we register it as a regular dispatch handler via <code>gc.on()</code>. When Discord confirms a successful Identify, <code>on_rdy</code> caches <code>session_id</code>, <code>user_id</code>, and <code>resume_gateway_url</code> — the three values needed to Resume after a disconnect. Note the query params appended to <code>resume_gateway_url</code> — Discord returns it bare, but the docs require the same version and encoding as the initial connection.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L362" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gatewayclient.on" class="level3">
+<h3 class="anchored" data-anchor-id="gatewayclient.on">GatewayClient.on</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on(</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    event_type, handler</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p>The gateway runs on two cooperating loops. <code>_hb</code> sends heartbeats at the interval Discord specifies and watches for ACK responses — if one is missed, the connection is zombied and gets closed with code 4000 (which preserves the session for Resuming). <code>_listen</code> reads events and dispatches them by opcode. On disconnect (exception from <code>recv_evt</code>), it calls <code>_reconnect</code> to swap in a fresh WebSocket. The new connection triggers Hello (op 10), which restarts the heartbeat and sends either Identify (first connect) or Resume (reconnect) depending on whether a session already exists. Op 7 (Reconnect) follows the same path — close and reopen.</p>
+<p>All reconnection funnels through <code>_reconnect</code>, which closes with code 4000 (keeping the session valid) and opens a new socket to <code>resume_gateway_url</code>. The listener’s op 10 handler then takes over automatically.</p>
+<p><code>start</code> opens the initial WebSocket and spawns the listener — nothing else. The listener handles Hello, kicks off the heartbeat, and sends Identify, so the full connection lifecycle is driven by events rather than imperative setup.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L411" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gatewayclient.start" class="level3">
+<h3 class="anchored" data-anchor-id="gatewayclient.start">GatewayClient.start</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> start(</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    debug:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="5b03d42f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc.start(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DEBUG: Received Opcode: 10
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 11
+sent 4000 (private use); then received 4000 (private use)
+DEBUG: Received Opcode: 10
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 10
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DBuddy: Houston, do we have a problem?
+sent 1000 (OK); then received 1000 (OK)
+DEBUG: Received Opcode: 10
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DEBUG: Received Opcode: 0
+DBuddy: Did we re-identify?
+DEBUG: Received Opcode: 11</code></pre>
+</div>
+</div>
+<p>Let’s now test that our gateway is getting events. Here is a simple handlers for new messages.</p>
+<div id="c5d2210c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> on_msg(msg):</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> msg.author.get(<span class="st">'bot'</span>): <span class="cf">return</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>msg<span class="sc">.</span>author[<span class="st">'username'</span>]<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>msg<span class="sc">.</span>content<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>gc.on(<span class="st">'MESSAGE_CREATE'</span>, on_msg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now, we can send a message and it should be printed out.</p>
+<div id="9b9c213f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> ch.send(<span class="st">'Test our event listener! Otters are awesome 🦦'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383536193536111</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Test our event listener! Otter…'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Let’s trigger and reconnection that resumes and one that doesn’t and see if everything works correctly and we still end up with our printed message.</p>
+<div id="9b1041f7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc._reconnect(resume<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> asyncio.sleep(<span class="dv">2</span>)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> ch.send(<span class="st">'Houston, do we have a problem?'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383629688901683</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Houston, do we have a problem?'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="a5a44291" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc._reconnect(resume<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> asyncio.sleep(<span class="dv">2</span>)</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> ch.send(<span class="st">'Did we re-identify?'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1494383657929019646</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Did we re-identify?'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><code>stop</code> is a full shutdown — cancels both background tasks and closes the WebSocket with the default code (1000), which tells Discord to invalidate the session. After this, a fresh <code>start()</code> would need to Identify from scratch.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L419" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gatewayclient.stop" class="level3">
+<h3 class="anchored" data-anchor-id="gatewayclient.stop">GatewayClient.stop</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> stop(</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="bcb556b7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc.stop()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="voice-api" class="level2">
+<h2 class="anchored" data-anchor-id="voice-api">Voice API</h2>
+<div id="0262cc00" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc.start()</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>vch <span class="op">=</span> chs[<span class="dv">3</span>]<span class="op">;</span> vch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Connected! Session: 071532487214aa5877a8dcc277014457, heartbeat: 41250ms
+Gateway started!</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>Channel(id=1327046393453613080, name='General', type=2)</code></pre>
+</div>
+</div>
+<p>Voice requires <strong>three simultaneous connections</strong>:</p>
+<ol type="1">
+<li><strong>Main Gateway WebSocket</strong> (<code>gc</code>) — to request joining a voice channel and receive voice server info</li>
+<li><strong>Voice Gateway WebSocket</strong> — a <em>separate</em> WebSocket to a dedicated voice server for session coordination</li>
+<li><strong>Voice UDP</strong> — a UDP (datagram) connection for actual audio data. UDP is used over TCP because real-time audio needs low latency more than guaranteed delivery</li>
+</ol>
+<p><a href="https://AnswerDotAI.github.io/cordslite/core.html#voiceclient"><code>VoiceClient</code></a> manages the voice gateway WebSocket and UDP connections for a single voice channel, coordinated through the main <a href="https://AnswerDotAI.github.io/cordslite/core.html#gatewayclient"><code>GatewayClient</code></a>.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L426" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="voiceclient" class="level3">
+<h3 class="anchored" data-anchor-id="voiceclient">VoiceClient</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> VoiceClient(</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>    gateway, channel</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
+<div id="bfbf599c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>vc <span class="op">=</span> VoiceClient(gc, vch)<span class="op">;</span> vc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>VoiceClient(self.ch=Channel(id=1327046393453613080, name='General', type=2), self.running=False)</code></pre>
+</div>
+</div>
+<p>Voice requires additional <a href="https://AnswerDotAI.github.io/cordslite/core.html#op"><code>Op</code></a> opcodes beyond the main gateway’s identify/heartbeat. These handle the voice-specific protocol: requesting to join a channel (<code>voice_state</code>), authenticating with the voice server (<code>voice_identify</code>), negotiating encryption (<code>select_protocol</code>), signaling audio intent (<code>speaking</code>), and keeping the voice connection alive (<code>voice_heartbeat</code>).</p>
+<p>The voice heartbeat uses a different format from the main gateway — v8 requires <code>seq_ack</code> tracking the last received sequence number. It must start <strong>immediately</strong> after receiving Hello, before UDP setup, or the voice WebSocket will time out (close code 4006).</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L447" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op.voice_heartbeat" class="level3">
+<h3 class="anchored" data-anchor-id="op.voice_heartbeat">Op.voice_heartbeat</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> voice_heartbeat(</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>    seq_ack:<span class="bu">int</span><span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L444" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op.speaking" class="level3">
+<h3 class="anchored" data-anchor-id="op.speaking">Op.speaking</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> speaking(</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>    ssrc, speaking:<span class="bu">int</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L441" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op.select_protocol" class="level3">
+<h3 class="anchored" data-anchor-id="op.select_protocol">Op.select_protocol</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_protocol(</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>    ip, port, mode:<span class="bu">str</span><span class="op">=</span><span class="st">'aead_xchacha20_poly1305_rtpsize'</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L438" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op.voice_identify" class="level3">
+<h3 class="anchored" data-anchor-id="op.voice_identify">Op.voice_identify</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> voice_identify(</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    server_id, user_id, session_id, token</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L435" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="op.voice_state" class="level3">
+<h3 class="anchored" data-anchor-id="op.voice_state">Op.voice_state</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> voice_state(</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    guild_id, channel_id</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p><code>_connect</code> handles the voice WebSocket handshake: request to join via the main gateway, wait for Discord to assign a voice server, connect to it, authenticate, and start the voice heartbeat. The heartbeat must begin immediately after Hello — before UDP setup — or the voice WebSocket times out (close code 4006).</p>
+<div id="fd84551f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> vc._connect()<span class="op">;</span> vc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>IP Discovery</strong>: Discord needs your <em>external</em> IP/port (what the internet sees after NAT), not your local one. We send a 74-byte UDP request containing our SSRC, and Discord responds with our external address filled in:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Size</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type</td>
+<td>2 bytes</td>
+<td>1=request, 2=response</td>
+</tr>
+<tr class="even">
+<td>Length</td>
+<td>2 bytes</td>
+<td>70 (size of remaining fields)</td>
+</tr>
+<tr class="odd">
+<td>SSRC</td>
+<td>4 bytes</td>
+<td>Our audio stream identifier</td>
+</tr>
+<tr class="even">
+<td>Address</td>
+<td>64 bytes</td>
+<td>Blank in request; our external IP in response</td>
+</tr>
+<tr class="odd">
+<td>Port</td>
+<td>2 bytes</td>
+<td>Blank in request; our external port in response</td>
+</tr>
+</tbody>
+</table>
+<p>Note: Discord requires a <strong>Speaking</strong> event (even with <code>speaking=0</code>) before it will send audio packets to you.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L478" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_ip" class="level3">
+<h3 class="anchored" data-anchor-id="get_ip">get_ip</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> get_ip(</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>    trans, proto, ssrc</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p><code>_udp</code> sets up the audio transport: open UDP socket, discover our external IP, tell Discord which encryption mode to use (<code>select_protocol</code>), receive the secret key, and signal that we’re ready to speak.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L486" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="voiceudp" class="level3">
+<h3 class="anchored" data-anchor-id="voiceudp">VoiceUDP</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> VoiceUDP(</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Interface for datagram protocol.</em></p>
+<div id="ee5f958f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> vc._udp()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="3f50a9dc" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># vc.secret</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>join</code> ties the three phases together into a single call: connect to voice server, set up UDP, ready to receive audio.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L505" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="voiceclient.join" class="level3">
+<h3 class="anchored" data-anchor-id="voiceclient.join">VoiceClient.join</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> join(</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="f639c0e8" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> vc.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Voice ready!</code></pre>
+</div>
+</div>
+<p>Audio arrives as UDP packets using the <strong>RTP (Real-time Transport Protocol)</strong> format. Each packet contains: - <strong>RTP header</strong> (12+ bytes) — version, sequence number, timestamp, SSRC (identifies which user is speaking) - <strong>Encrypted payload</strong> — the Opus-encoded audio, encrypted with the <code>secret_key</code> - <strong>Nonce</strong> (4 bytes at end) — used for decryption</p>
+<p>Decryption with <code>aead_xchacha20_poly1305_rtpsize</code>: - The cipher expects a 24-byte nonce, but only 4 bytes are transmitted — we pad with 20 zero bytes - The unencrypted RTP header is used as AAD (Additional Authenticated Data) — it’s verified but not encrypted - For <code>rtpsize</code> mode, the AAD includes the 12-byte base header, any CSRC entries (4 bytes each, usually 0), and only the 4-byte extension <em>preamble</em> — the extension <em>data</em> is part of the encrypted payload - After decryption, we skip past the extension data (its length is in bytes 14-15 of the original packet, multiplied by 4) to reach the raw Opus audio</p>
+<p>Packets with byte[1] == <code>0x78</code> are RTP voice data. Other packets (like <code>0xC9</code>) are RTCP control packets used for connection quality reporting — we skip those.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L511" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="decrypt_pkt" class="level3">
+<h3 class="anchored" data-anchor-id="decrypt_pkt">decrypt_pkt</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb103"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decrypt_pkt(</span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>    pkt, secret</span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p>Recording writes each speaker to a separate file (<code>recording_&lt;ssrc&gt;.mp3</code>) rather than mixing in real-time. This keeps the code simple and gives us per-speaker files — ideal for transcription. Each speaker gets their own Opus decoder because Opus is <em>stateful</em> — feeding multiple speakers through one decoder corrupts its internal state and produces garbled audio.</p>
+<p>Silence padding ensures all files stay time-aligned: at the start (padding from <code>_rec_start</code> to first packet), and during gaps (using RTP timestamps, which Discord increments continuously even during silence). Without this, files would be compressed in time and impossible to merge or correlate.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L524" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="silence" class="level3">
+<h3 class="anchored" data-anchor-id="silence">silence</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> silence(</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>    n_smpls:<span class="bu">int</span>, <span class="co"># 2 bytes per sample (s16le)</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<p><code>start_recording</code> drains any previously queued packets so recordings start clean. <code>stop_recording</code> calls <code>communicate()</code> on each ffmpeg process to flush buffered audio and cleanly close the output files — without this, recordings may be truncated or corrupted.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L570" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="voiceclient.stop_recording" class="level3">
+<h3 class="anchored" data-anchor-id="voiceclient.stop_recording">VoiceClient.stop_recording</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stop_recording(</span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L561" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="voiceclient.start_recording" class="level3">
+<h3 class="anchored" data-anchor-id="voiceclient.start_recording">VoiceClient.start_recording</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> start_recording(</span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>    path:<span class="bu">str</span><span class="op">=</span><span class="st">'recording.mp3'</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="3b460c20" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>pth <span class="op">=</span> <span class="st">'/tmp/recording.mp3'</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>vc.start_recording(path<span class="op">=</span>pth)</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> asyncio.sleep(<span class="dv">10</span>)</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>rpths <span class="op">=</span> vc.stop_recording()<span class="op">;</span> rpths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1f535d3e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Audio(rpths[0])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To leave a voice channel cleanly: 1. Stop the heartbeat loop 2. Close the Voice WebSocket 3. Close the UDP transport 4. Send a Voice State Update with <code>channel_id=None</code> on the main gateway — this tells Discord to remove the bot from the voice channel. Without this, the bot appears to stay in the channel until it times out.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L578" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="voiceclient.leave" class="level3">
+<h3 class="anchored" data-anchor-id="voiceclient.leave">VoiceClient.leave</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> leave(</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="b1409883" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> vc.leave()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="eb0443b4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gc.stop()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gateway stopped!</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="bots" class="level2">
+<h2 class="anchored" data-anchor-id="bots">Bots</h2>
+<p><a href="https://AnswerDotAI.github.io/cordslite/core.html#bot"><code>Bot</code></a> ties together <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordclient"><code>DiscordClient</code></a> (REST) and <a href="https://AnswerDotAI.github.io/cordslite/core.html#gatewayclient"><code>GatewayClient</code></a> (events) into a single object with a decorator-based command router. Commands are registered with <code>@bot.cmd</code> — the function name becomes the command name, prefixed with <code>!</code> in Discord. So <code>def echo</code> responds to <code>!echo</code>. Every command handler takes two arguments: the <a href="https://AnswerDotAI.github.io/cordslite/core.html#message"><code>Message</code></a> object and a string of everything the user typed after the command name (empty string if nothing).</p>
+<p>The <code>_on_msg</code> handler ignores messages from the bot itself to prevent infinite loops — a common gotcha with Discord bots. It splits the message into command name + args, so <code>!echo hello world</code> passes <code>"hello world"</code> as the <code>args</code> string to the handler.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L585" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="bot" class="level3">
+<h3 class="anchored" data-anchor-id="bot">Bot</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Bot(</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>    intents, kw:VAR_KEYWORD</span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Discord bot with command routing</em></p>
+<div id="7d3d404b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>bot <span class="op">=</span> Bot(intents)</span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> bot.start()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Connected! Session: aebd851f6f7e226c5f982f03cf7d27ef, heartbeat: 41250ms
+Gateway started!</code></pre>
+</div>
+</div>
+<p>Commands can be registered at any time — even after <code>bot.start()</code>. This works because <code>@bot.cmd</code> just adds the function to a dict; the message handler looks up commands dynamically on each message.</p>
+<div id="24452d23" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="at">@bot.cmd</span></span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> echo(msg, args): <span class="cf">await</span> (<span class="cf">await</span> msg.channel()).send(<span class="ss">f'You said: </span><span class="sc">{</span>args<span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="253a02e4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>bot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>Bot(cmds=['echo'])</code></pre>
+</div>
+</div>
+<p>Errors in command handlers are caught and stored in <code>bot.errors</code> — useful for debugging in dynamic environments like solveit where you can inspect the list after the fact. For real-time handling (e.g.&nbsp;notifying the user in Discord), register a handler with <code>@bot.on_error</code>. Both mechanisms work simultaneously.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L622" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="bot.on_error" class="level3">
+<h3 class="anchored" data-anchor-id="bot.on_error">Bot.on_error</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb119"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_error(</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Call self as a function.</em></p>
+<div id="97ca35ad" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="at">@bot.on_error</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> handle_err(msg, e): <span class="bu">print</span>(<span class="st">'error'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="abcb9fd5" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="at">@bot.cmd</span></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> err(msg): <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">'test'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="01ed4765" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>bot.errors</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>[]</code></pre>
+</div>
+</div>
+<p>Voice integration reuses the existing <a href="https://AnswerDotAI.github.io/cordslite/core.html#voiceclient"><code>VoiceClient</code></a> — <a href="https://AnswerDotAI.github.io/cordslite/core.html#bot"><code>Bot</code></a> just provides convenience methods to manage the lifecycle. The bot can only be in one voice channel at a time.</p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L635" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="bot.leave_voice" class="level3">
+<h3 class="anchored" data-anchor-id="bot.leave_voice">Bot.leave_voice</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb124"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> leave_voice(</span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Leave the current voice channel</em></p>
+<hr>
+<p><a href="https://github.com/AnswerDotAI/cordslite/blob/main/cordslite/core.py#L628" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="bot.join_voice" class="level3">
+<h3 class="anchored" data-anchor-id="bot.join_voice">Bot.join_voice</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb125"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> join_voice(</span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>    channel</span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Join a voice channel and return VoiceClient</em></p>
+<div id="c8c1bd38" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>vc <span class="op">=</span> <span class="cf">await</span> bot.join_voice(vch)<span class="op">;</span> vc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Voice ready!</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>VoiceClient(self.ch=Channel(id=1327046393453613080, name='General', type=2), self.running=True)</code></pre>
+</div>
+</div>
+<div id="575edc85" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>vc.start_recording()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>'recording.mp3'</code></pre>
+</div>
+</div>
+<div id="ff12491d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>pth <span class="op">=</span> vc.stop_recording()</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> bot.leave_voice()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="47ae080a" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Audio(pth)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/AnswerDotAI\.github\.io\/cordslite");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/AnswerDotAI/cordslite/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
