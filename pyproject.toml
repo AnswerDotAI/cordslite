@@ -38,4 +38,5 @@ version = {attr = "cordslite.__version__"}
 include = ["cordslite"]
 
 [tool.nbdev]
-allowed_cell_metadata_keys = ["solveit_ai"]
+allowed_metadata_keys = ['solveit']
+allowed_cell_metadata_keys = ['solveit_ai']
