@@ -12,8 +12,10 @@ from fastcore.meta import *
 from fastcore.utils import *
 from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt as xchacha_decrypt
 
-import asyncio,ffmpeg,httpx,json,opuslib_next,os,random,re,socket,time
+import asyncio,ffmpeg,httpx,json,os,random,re,socket,time
 import websockets.asyncio.client
+try: import opuslib_next
+except: print("Failed to import opuslib-next")
 
 # %% ../nbs/00_core.ipynb #d9e0f6cf
 class DiscordClient:
