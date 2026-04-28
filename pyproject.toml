@@ -17,6 +17,7 @@ classifiers = [
 ]
 dependencies = [
     "fastcore>=1.12.11",
+    "python-fasthtml",
     "ffmpeg-python>=0.2.0",
     "httpx>=0.28.1",
     "opuslib-next>=1.1.5",
