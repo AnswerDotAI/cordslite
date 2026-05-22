@@ -498,8 +498,10 @@ class VoiceClient:
 
         self.session_id = self.token = self.endpoint = None
         self.ws = self.udp = None
-        self.listen_task = self.hb_task = None
+        self._listen_task = self._hb_task = None
         self.v_seq = -1
+        self.resuming = False
+        self.resumed = asyncio.Event()
 
         self.ssrc_to_user = {}
         self.decoders = {}
@@ -543,6 +545,9 @@ def speaking(cls:Op, ssrc, speaking=0):
 @patch(cls_method=True)
 def voice_heartbeat(cls:Op, seq_ack=-1):
     return cls(op=3, d=AttrDict(t=int(time.time() * 1000), seq_ack=seq_ack))
+@patch(cls_method=True)
+def voice_resume(cls:Op, server_id, session_id, token, seq_ack=-1):
+    return cls(op=7, d=AttrDict(server_id=server_id, session_id=session_id, token=token, seq_ack=seq_ack))
 
 # %% ../nbs/00_core.ipynb #7bdf761e
 @patch
@@ -667,6 +672,42 @@ async def _hb(self:VoiceClient):
         if not self._got_ack: return await self.ws.close(code=4000)
 
 @patch
+async def _open_ws(self:VoiceClient):
+    self.ws = await websockets.connect(f"wss://{self.endpoint}/?v=8")
+    self._listen_task = asyncio.create_task(self._listen())
+
+@patch
+def reset_audio(self:VoiceClient):
+    self.decoders,self.last_ts,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
+
+@patch
+async def _reconnect(self:VoiceClient, resume=True):
+    self.resuming = resume
+    if resume: self.resumed.clear()
+    if self._listen_task: self._listen_task.cancel()
+    if self._hb_task: self._hb_task.cancel()
+    if self.ws: await self.ws.close(code=4000 if resume else 1000)
+    if not resume:
+        if getattr(self, 'trans', None): self.trans.close()
+        self.reset_audio()
+        self.v_seq = -1
+        self.state_ready.clear(); self.server_ready.clear()
+        self.sess.clear(); self.rdy.clear()
+        await self.gc.ws.send(Op.voice_state(self.gid, None))
+        await asyncio.sleep(0.5)
+        await self._join()
+    await asyncio.sleep(2)
+    await self._open_ws()
+
+@patch
+async def _wait_dave_ready(self:VoiceClient, timeout=5):
+    start = time.time()
+    while self.dave_version and not self.dave.ready:
+        if time.time() - start > timeout: raise TimeoutError("DAVE not ready after resume")
+        await asyncio.sleep(0.05)
+
+# %% ../nbs/00_core.ipynb #94551393
+@patch
 async def _listen(self:VoiceClient):
     while self.running:
         try:
@@ -676,6 +717,7 @@ async def _listen(self:VoiceClient):
                 continue
 
             msg = dict2obj(json.loads(msg))
+            if (seq := msg.get("seq")) is not None: self.v_seq = seq
             op, d = msg.op, msg.d
             if op == 2: await self._handle_rdy(d)
             elif op == 4: await self._handle_sess_desc(d)
@@ -684,16 +726,21 @@ async def _listen(self:VoiceClient):
             elif op == 6: self._got_ack = True
             elif op == 8: # HELLO
                 self.hb_int = d.heartbeat_interval / 1_000
-                if hasattr(self, '_hb_task') and self._hb_task: self._hb_task.cancel()
+                if self._hb_task: self._hb_task.cancel()
                 self._hb_task = asyncio.create_task(self._hb())
-                await self.ws.send(Op.voice_identify(self.gid, self.gc.user_id, self.session_id, self.token))
-                # TODO: handle reconnection
+                if self.resuming: await self.ws.send(Op.voice_resume(self.gid, self.session_id, self.token, self.v_seq))
+                else: await self.ws.send(Op.voice_identify(self.gid, self.gc.user_id, self.session_id, self.token))
+            elif op == 9:
+                self.resuming = False
+                await self._wait_dave_ready()
+                self.resumed.set()
             elif op > 13: await self._handle_trans(op, d)
             else: print("voice json", op, d)
         except websockets.exceptions.ConnectionClosed as e:
+            if not self.running: break
             print(f'voice gateway closed: {e.code} {e.reason}')
-            self.running = False
-            break
+            await self._reconnect(resume=True)
+            continue
         except Exception as e:
             print(e)
             break
@@ -704,8 +751,8 @@ async def join(self:VoiceClient, debug=False):
     self.debug = debug
     self.running = True
     await self._join()
-    self.ws = await websockets.connect(f"wss://{self.endpoint}/?v=8")
-    self._listen_task = asyncio.create_task(self._listen())
+    await self._open_ws()
+
 
 # %% ../nbs/00_core.ipynb #f8bdeef8
 @patch
@@ -865,14 +912,10 @@ async def play_file(self:VoiceClient, path): await self.send_pcm(file2pcm(path))
 
 # %% ../nbs/00_core.ipynb #c9a7e0f5
 @patch
-def reset_audio(self:VoiceClient):
-    self.decoders,self.last_ts,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
-
-@patch
 async def leave(self:VoiceClient):
     self.running = False
     await self.gc.ws.send(Op.voice_state(self.gid, None))  # channel_id null = leave
-    for t in (self.hb_task, self.listen_task, getattr(self, '_hb_task', None), getattr(self, '_listen_task', None)):
+    for t in (self._hb_task, self._listen_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
     if getattr(self, 'trans', None): self.trans.close()
