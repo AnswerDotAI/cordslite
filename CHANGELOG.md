@@ -2,6 +2,14 @@
 
 <!-- do not remove -->
 
+## 0.0.13
+
+### New Features
+
+- feat(voice): add WebSocket reconnection and resume support ([#14](https://github.com/AnswerDotAI/cordslite/pull/14)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add DAVE E2EE, voice send/receive overhaul, Guild.tree, message context helpers, and Discord skill ([#13](https://github.com/AnswerDotAI/cordslite/pull/13)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.0.12
 
 ### New Features
