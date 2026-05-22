@@ -17,6 +17,7 @@ classifiers = [
 ]
 dependencies = [
     "fastcore>=1.12.11",
+    "davey",
     "python-fasthtml",
     "ffmpeg-python>=0.2.0",
     "httpx>=0.28.1",
@@ -41,3 +42,6 @@ include = ["cordslite"]
 [tool.nbdev]
 allowed_metadata_keys = ['solveit']
 allowed_cell_metadata_keys = ['solveit_ai']
+
+[project.entry-points.pyskills]
+"cordslite.skill" = "cordslite.skill"
