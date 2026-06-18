@@ -355,7 +355,8 @@ async def search_and_delete_all(self:Channel, content, delay=2, show=False, **kw
     old = [m for m in msgs if datetime.fromisoformat(m.timestamp) <= cutoff]
     for i in range(0, len(recent), 20):
         ms = recent[i:i+20]
-        await self.bulk_delete([m.id for m in ms])
+        if len(ms)>1: await self.bulk_delete([m.id for m in ms])
+        else: await self._del_rotating([m.id for m in ms], show=show)
         if show: print(f'Bulk deleted {len(ms)}')
         await asyncio.sleep(delay)
     if old: await self._del_rotating([m.id for m in old], show=show, delay=delay)
