@@ -184,7 +184,7 @@ def date2snowflake(date_str):
 @patch
 async def search(self:Guild, content=None, author_id=None, channel_id=None, mentions=None,
                  has=None, before=None, after=None, pinned=None, sort_by=None, sort_order=None,
-                 offset=None, limit=None, use_user=False):
+                   offset=None, limit=None, use_user=False, nothread:bool=True):
     "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
     if before and not str(before).isdigit(): before = date2snowflake(before)
     if after and not str(after).isdigit(): after = date2snowflake(after)
@@ -192,7 +192,9 @@ async def search(self:Guild, content=None, author_id=None, channel_id=None, ment
         content=content, author_id=author_id, channel_id=channel_id,
         mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned,
         sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit)
-    return self.coll('Message', [m[0] for m in r['messages']])
+    msgs = [m for m in [m[0] for m in r['messages']]
+    if not (nothread and channel_id and m.channel_id != channel_id)]
+    return self.coll('Message', msgs)
 
 # %% ../nbs/00_core.ipynb #44642992
 @patch
@@ -339,11 +341,15 @@ async def _del_rotating(self:Channel, message_ids, delay=0.5, show=False):
     if show: print(f'Deleting {len(message_ids)} messages...')
     for i,mid in enumerate(message_ids):
         use_user = i % 2 == 1 and bool(self._client.user_token)
-        await self('DELETE', f'/channels/{self.id}/messages/{mid}', use_user=use_user)
+        try: await self('DELETE', f'/channels/{self.id}/messages/{mid}', use_user=use_user)
+        except DiscordError as e:
+            if e.args[0] == 10008: print(f"Already deleted: {mid}"); continue
+            raise
         await asyncio.sleep(delay)
         if show: print('.', end='', flush=True)
     return len(message_ids)
 
+# %% ../nbs/00_core.ipynb #a9c7d953
 @patch
 async def search_and_delete_all(self:Channel, content, delay=2, show=False, **kwargs):
     "Bulk delete recent msgs, individually delete older ones"
@@ -351,6 +357,8 @@ async def search_and_delete_all(self:Channel, content, delay=2, show=False, **kw
     cutoff = datetime.now(timezone.utc) - timedelta(days=13)
     gld = await self.guild
     msgs = await gld.search_all(content=content, channel_id=self.id, show=show, **kwargs)
+    seen = set()
+    msgs = [m for m in msgs if m.id not in seen and not seen.add(m.id)]
     recent = [m for m in msgs if datetime.fromisoformat(m.timestamp) > cutoff]
     old = [m for m in msgs if datetime.fromisoformat(m.timestamp) <= cutoff]
     for i in range(0, len(recent), 20):
