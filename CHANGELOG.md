@@ -2,6 +2,17 @@
 
 <!-- do not remove -->
 
+## 0.0.14
+
+### New Features
+
+- Filter out thread messages from search results, handle already-deleted messages, and deduplicate messages in search_and_delete_all ([#16](https://github.com/AnswerDotAI/cordslite/issues/16))
+
+### Bugs Squashed
+
+- Fall back to rotating delete when only one recent message ([#15](https://github.com/AnswerDotAI/cordslite/issues/15))
+
+
 ## 0.0.13
 
 ### New Features
