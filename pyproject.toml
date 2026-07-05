@@ -45,3 +45,6 @@ allowed_cell_metadata_keys = ['solveit_ai']
 
 [project.entry-points.pyskills]
 "cordslite.skill" = "cordslite.skill"
+
+[tool.chkstyle]
+skip_paths = ["_modidx.py"]
