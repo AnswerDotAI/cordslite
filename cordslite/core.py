@@ -852,12 +852,14 @@ async def join(self:VoiceClient, debug=False):
 @patch
 def decrypt(self:VoiceClient, pkt, uid):
     csrc_cnt = pkt[0] & 0x0F
-    hdr_sz = 12 + csrc_cnt * 4 + (4 if pkt[0] & 0x10 else 0)
+    has_ext = bool(pkt[0] & 0x10)
+    hdr_sz = 12 + csrc_cnt * 4 + (4 if has_ext else 0)
     nonce = bytearray(24) # only use 4, but pad to 24 bytes as expected by the cipher
     nonce[:4] = pkt[-4:]
     d, hdr, nonce = bytes(pkt[hdr_sz:-4]), bytes(pkt[:hdr_sz]), bytes(nonce)
-    d = xchacha_decrypt(d, hdr, nonce, bytes(self.secret_key))[8:]
-    return self.dave.decrypt(uid, davey.MediaType.audio, d)
+    d = xchacha_decrypt(d, hdr, nonce, bytes(self.secret_key))
+    if has_ext: d = d[4 * int.from_bytes(pkt[hdr_sz-2:hdr_sz], 'big'):] # ext payload length is in 32-bit words
+    return self.dave.decrypt(uid, davey.MediaType.audio, d) if getattr(self, 'dave', None) else d
 
 # %% ../nbs/00_core.ipynb #0a3ea406
 def silence(n_smpls:int): return b'\x00' * (n_smpls * n_chs * 2) # 2 bytes per sample (s16le)
