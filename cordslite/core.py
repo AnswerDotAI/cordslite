@@ -798,10 +798,17 @@ async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
         self.sess.clear(); self.rdy.clear()
     if rejoin:
         self._rejoining = True
-        self.state_ready.clear(); self.server_ready.clear()
-        await self.gc.ws.send(Op.voice_state(self.gid, None))
-        await asyncio.sleep(0.5)
-        await self._join()
+        while self.running: # the main gateway may itself be mid-reconnect; keep trying until it can carry us
+            try:
+                self.state_ready.clear(); self.server_ready.clear()
+                await self.gc.ws.send(Op.voice_state(self.gid, None))
+                await asyncio.sleep(0.5)
+                await self._join()
+                break
+            except Exception as e:
+                print('voice rejoin failed, retrying:', repr(e))
+                await asyncio.sleep(min(2 ** self._tries, 30))
+                self._tries += 1
         self._rejoining = False
     while self.running:
         await asyncio.sleep(min(2 ** self._tries, 30))
@@ -812,7 +819,7 @@ async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
 @patch
 async def _wait_dave_ready(self:VoiceClient, timeout=5):
     start = time.time()
-    while self.dave_version and not self.dave.ready:
+    while getattr(self, 'dave', None) and self.dave.epoch and not self.dave.ready: # no epoch = no E2EE to wait for
         if time.time() - start > timeout: raise TimeoutError("DAVE not ready after resume")
         await asyncio.sleep(0.05)
 
@@ -977,9 +984,12 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
 
 # %% ../nbs/00_core.ipynb #81c7c123
 @patch
-def encode(self:VoiceClient, fr):
-    opus = self.encoder.encode(fr, spf)
-    return self.dave.encrypt_opus(opus) if self.dave_version else opus
+def _enc_opus(self:VoiceClient, opus):
+    "DAVE-wrap an opus frame only when the E2EE session is active (epoch started and keys ready)"
+    return self.dave.encrypt_opus(opus) if getattr(self, 'dave', None) and self.dave.ready else opus
+
+@patch
+def encode(self:VoiceClient, fr): return self._enc_opus(self.encoder.encode(fr, spf))
 
 @patch
 def send_pkt(self:VoiceClient, payload):
@@ -1014,11 +1024,13 @@ async def send_frames(self:VoiceClient, frames, end=True):
             await asyncio.sleep(max(0, nxt - loop.time()))
     finally:
         if end:
-            for _ in range(5): # per the docs, stops unintended Opus interpolation into the next transmission
-                self.send_pkt(self.dave.encrypt_opus(opus_silence) if self.dave_version else opus_silence)
-                nxt += spf / sr
-                await asyncio.sleep(max(0, nxt - loop.time()))
-            await self.speaking(False)
+            try:
+                for _ in range(5): # per the docs, stops unintended Opus interpolation into the next transmission
+                    self.send_pkt(self._enc_opus(opus_silence))
+                    nxt += spf / sr
+                    await asyncio.sleep(max(0, nxt - loop.time()))
+                await self.speaking(False)
+            except websockets.exceptions.ConnectionClosed: pass # ws died mid-send; nothing to clean up
 
 # %% ../nbs/00_core.ipynb #80eaf581
 frame_bytes = spf * n_chs * 2
