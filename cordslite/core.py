@@ -425,6 +425,7 @@ class GatewayClient:
         self.token = token or os.environ['DISCORD_BOT_TOKEN']
         self.ws = self.hb_int = self.session_id = self.seq = None
         self.running = False
+        self._tries = 0
         gw_info = httpx.get(f'{client.base_url}/gateway/bot', headers={'Authorization': f'Bot {self.token}'}).json()
         if 'url' not in gw_info: raise ConnectionError(f"Gateway auth failed: {gw_info.get('message', gw_info)}")
         self.url = f"{gw_info['url']}?v=10&encoding=json"
@@ -432,7 +433,7 @@ class GatewayClient:
     
     async def on_rdy(self, evt):
         self.session_id, self.user_id, = evt['session_id'], evt['user']['id']
-        self.resume_url = evt.get('resume_gateway_url', self.url) + '?v=10&encoding=json'
+        self.resume_url = evt['resume_gateway_url'] + '?v=10&encoding=json' if 'resume_gateway_url' in evt else self.url
         
     def __repr__(self): return f"GatewayClient({self.intents=}, {self.url=})"
 
@@ -476,7 +477,7 @@ async def send(self:websockets.asyncio.client.ClientConnection, msg, **kw):
 @patch
 async def recv_evt(self:GatewayClient):
     evt = Event(json.loads(await self.ws.recv()), self.dc)
-    if evt.op == 0 and evt.seq: self.seq = evt.seq
+    if evt.op == 0 and evt.seq: self.seq,self._tries = evt.seq,0
     return evt
 
 # %% ../nbs/00_core.ipynb #ce969a6d
@@ -497,13 +498,18 @@ async def _hb(self:GatewayClient):
 # %% ../nbs/00_core.ipynb #86329193
 @patch
 async def _reconnect(self:GatewayClient, resume=False):
-    code, url = 4000, self.resume_url
-    if not resume:
-        code, url = 1000, self.url
-        self.session_id = None
-    await self.ws.close(code=code)
-    await asyncio.sleep(2)
-    self.ws = await websockets.connect(url)
+    resume = resume and bool(self.session_id)
+    code, url = (4000, self.resume_url) if resume else (1000, self.url)
+    if not resume: self.session_id = None
+    try: await self.ws.close(code=code)
+    except Exception: pass
+    while self.running:
+        await asyncio.sleep(min(2 ** self._tries, 60))
+        self._tries += 1
+        try:
+            self.ws = await websockets.connect(url, max_size=None)
+            return
+        except OSError as e: print('gateway reconnect failed:', repr(e))
 
 # %% ../nbs/00_core.ipynb #e7c93acc
 @patch
@@ -521,11 +527,19 @@ async def _listen(self:GatewayClient):
             elif evt.op == 0 and evt.type in self.handlers: asyncio.create_task(self.handlers[evt.type](evt.d))
             elif evt.op == 11: self._got_ack = True
             elif evt.op == 1: await self.ws.send(Op.heartbeat(self.seq))
-            elif evt.op == 7: await self._reconnect()
+            elif evt.op == 7: await self._reconnect(resume=True)
             elif evt.op == 9: await self._reconnect(resume=evt.d)
+        except websockets.exceptions.ConnectionClosed as e:
+            if not self.running: break
+            print(f'gateway closed: {e.code} {e.reason}')
+            if e.code in (4004, 4010, 4011, 4012, 4013, 4014): # fatal: bad token/shard/intents
+                self.running = False
+                break
+            await self._reconnect(resume=e.code not in (4007, 4009))
+            continue
         except Exception as e:
-            print(e)
-            await self._reconnect()
+            print('gateway listen error:', repr(e))
+            await self._reconnect(resume=True)
             continue
 
 # %% ../nbs/00_core.ipynb #d23c0788
@@ -533,7 +547,7 @@ async def _listen(self:GatewayClient):
 async def start(self:GatewayClient, debug=False):
     self.debug = debug
     self.running = True
-    self.ws = await websockets.connect(self.url)
+    self.ws = await websockets.connect(self.url, max_size=None)
     self._listen_task = asyncio.create_task(self._listen())
 
 # %% ../nbs/00_core.ipynb #bef72576
@@ -742,7 +756,7 @@ async def _hb(self:VoiceClient):
 
 @patch
 async def _open_ws(self:VoiceClient):
-    self.ws = await websockets.connect(f"wss://{self.endpoint}/?v=8")
+    self.ws = await websockets.connect(f"wss://{self.endpoint}/?v=8", max_size=None)
     self._listen_task = asyncio.create_task(self._listen())
 
 @patch
