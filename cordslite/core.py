@@ -857,8 +857,8 @@ async def _listen(self:VoiceClient):
         except websockets.exceptions.ConnectionClosed as e:
             if not self.running: break
             print(f'voice gateway closed: {e.code} {e.reason}')
-            if e.code in (4004, 4014): break # kicked/moved/bad auth: only gateway events can revive us
-            asyncio.create_task(self._reconnect(resume=e.code not in (4006, 4009)))
+            if e.code == 4014: break # kicked/moved or server swap: only gateway events can revive us
+            asyncio.create_task(self._reconnect(resume=e.code not in (4003, 4004, 4005, 4006, 4009, 4011)))
             break
         except Exception as e:
             print('voice listen error:', repr(e))
@@ -868,7 +868,13 @@ async def _listen(self:VoiceClient):
 async def join(self:VoiceClient, debug=False):
     self.debug = debug
     self.running = True
-    await self._join()
+    try: await self._join()
+    except TimeoutError: # Discord may still hold a stale voice state (unclean shutdown): detach, then join again
+        self._rejoining = True # so our own detach isn't mistaken for a kick
+        await self.gc.ws.send(Op.voice_state(self.gid, None))
+        await asyncio.sleep(1)
+        await self._join()
+        self._rejoining = False
     await self._open_ws()
 
 
