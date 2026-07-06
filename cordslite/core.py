@@ -558,7 +558,7 @@ class VoiceClient:
         self._listen_task = self._hb_task = None
         self.v_seq = -1
         self._tries = 0
-        self.resuming = False
+        self.resuming = self._rejoining = False
         self.resumed = asyncio.Event()
 
         self.ssrc_to_user = {}
@@ -573,15 +573,25 @@ class VoiceClient:
     async def on_state_update(self, data):
         if data["user_id"] != self.gc.user_id: return
         self.session_id = data["session_id"]
+        ch = data.get("channel_id")
+        if ch is None:
+            if getattr(self, 'running', False) and not self._rejoining:
+                print('removed from voice channel; disconnecting')
+                await self.disconnect()
+            return
+        if ch != self.ch.id: self.ch['id'] = ch # moved to another channel
         self.state_ready.set()
 
     async def on_server_update(self, data):
         if data["guild_id"] != self.gid: return
-        self.token = data["token"]
-        self.endpoint = data["endpoint"]
-        if self.endpoint and self.endpoint.startswith("wss://"):
-            self.endpoint = self.endpoint[6:]
+        tok,ep = data["token"],data["endpoint"]
+        if ep and ep.startswith("wss://"): ep = ep[6:]
+        moved = self.server_ready.is_set() and (ep,tok) != (self.endpoint,self.token)
+        self.token,self.endpoint = tok,ep
+        if not ep: return self.server_ready.clear() # server went away; a follow-up update names the new one
         self.server_ready.set()
+        if moved and getattr(self, 'running', False):
+            asyncio.create_task(self._reconnect(resume=False, rejoin=False))
 
     def __repr__(self): return f'VoiceClient({self.ch=})'
 
@@ -740,7 +750,8 @@ def reset_audio(self:VoiceClient):
     self.decoders,self.last_ts,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
 
 @patch
-async def _reconnect(self:VoiceClient, resume=True):
+async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
+    if rejoin is None: rejoin = not resume
     self.resuming = resume
     if resume: self.resumed.clear()
     t = self._listen_task
@@ -753,11 +764,14 @@ async def _reconnect(self:VoiceClient, resume=True):
         if getattr(self, 'trans', None): self.trans.close()
         self.reset_audio()
         self.v_seq = -1
-        self.state_ready.clear(); self.server_ready.clear()
         self.sess.clear(); self.rdy.clear()
+    if rejoin:
+        self._rejoining = True
+        self.state_ready.clear(); self.server_ready.clear()
         await self.gc.ws.send(Op.voice_state(self.gid, None))
         await asyncio.sleep(0.5)
         await self._join()
+        self._rejoining = False
     while self.running:
         await asyncio.sleep(min(2 ** self._tries, 30))
         self._tries += 1
@@ -978,14 +992,20 @@ async def play_file(self:VoiceClient, path): await self.send_pcm(file2pcm(path))
 
 # %% ../nbs/00_core.ipynb #c9a7e0f5
 @patch
-async def leave(self:VoiceClient):
+async def disconnect(self:VoiceClient):
+    "Tear down voice ws/UDP without notifying the main gateway (used when Discord already removed us)"
     self.running = False
-    await self.gc.ws.send(Op.voice_state(self.gid, None))  # channel_id null = leave
     for t in (self._hb_task, self._listen_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
     if getattr(self, 'trans', None): self.trans.close()
     self.reset_audio()
+
+@patch
+async def leave(self:VoiceClient):
+    self.running = False
+    await self.gc.ws.send(Op.voice_state(self.gid, None))  # channel_id null = leave
+    await self.disconnect()
 
 # %% ../nbs/00_core.ipynb #84855115
 class Bot:
