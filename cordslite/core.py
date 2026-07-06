@@ -557,6 +557,7 @@ class VoiceClient:
         self.ws = self.udp = None
         self._listen_task = self._hb_task = None
         self.v_seq = -1
+        self._tries = 0
         self.resuming = False
         self.resumed = asyncio.Event()
 
@@ -665,6 +666,7 @@ async def _handle_sess_desc(self:VoiceClient, d):
     self.send_ts = random.randrange(0, 2**32)
     self.send_nonce = 0
     self.encoder = opuslib_next.Encoder(sr, n_chs, opuslib_next.APPLICATION_AUDIO)
+    self._tries = 0
     self.sess.set()
 
 # %% ../nbs/00_core.ipynb #09056d33
@@ -741,9 +743,12 @@ def reset_audio(self:VoiceClient):
 async def _reconnect(self:VoiceClient, resume=True):
     self.resuming = resume
     if resume: self.resumed.clear()
-    if self._listen_task: self._listen_task.cancel()
+    t = self._listen_task
+    if t and t is not asyncio.current_task(): t.cancel()
     if self._hb_task: self._hb_task.cancel()
-    if self.ws: await self.ws.close(code=4000 if resume else 1000)
+    if self.ws:
+        try: await self.ws.close(code=4000 if resume else 1000)
+        except Exception: pass
     if not resume:
         if getattr(self, 'trans', None): self.trans.close()
         self.reset_audio()
@@ -753,8 +758,11 @@ async def _reconnect(self:VoiceClient, resume=True):
         await self.gc.ws.send(Op.voice_state(self.gid, None))
         await asyncio.sleep(0.5)
         await self._join()
-    await asyncio.sleep(2)
-    await self._open_ws()
+    while self.running:
+        await asyncio.sleep(min(2 ** self._tries, 30))
+        self._tries += 1
+        try: return await self._open_ws()
+        except OSError as e: print('voice reconnect failed:', repr(e))
 
 @patch
 async def _wait_dave_ready(self:VoiceClient, timeout=5):
@@ -789,6 +797,7 @@ async def _listen(self:VoiceClient):
                 else: await self.ws.send(Op.voice_identify(self.gid, self.gc.user_id, self.session_id, self.token))
             elif op == 9:
                 self.resuming = False
+                self._tries = 0
                 await self._wait_dave_ready()
                 self.resumed.set()
             elif op > 13: await self._handle_trans(op, d)
@@ -796,11 +805,11 @@ async def _listen(self:VoiceClient):
         except websockets.exceptions.ConnectionClosed as e:
             if not self.running: break
             print(f'voice gateway closed: {e.code} {e.reason}')
-            await self._reconnect(resume=True)
-            continue
-        except Exception as e:
-            print(e)
+            if e.code in (4004, 4014): break # kicked/moved/bad auth: only gateway events can revive us
+            asyncio.create_task(self._reconnect(resume=e.code not in (4006, 4009)))
             break
+        except Exception as e:
+            print('voice listen error:', repr(e))
 
 # %% ../nbs/00_core.ipynb #ab140e91
 @patch
