@@ -723,6 +723,11 @@ async def _handle_trans(self:VoiceClient, op, d):
             await self.ws.send({"op": 23, "d": {"transition_id": tid}})
     elif op == 22:  # DAVE_EXECUTE_TRANSITION
         self.execute_transition(d["transition_id"])
+    elif op == 13:  # CLIENT_DISCONNECT: a user left, drop their decode state
+        uid = int(d["user_id"])
+        self.decoders.pop(uid, None)
+        self.last_ts = {k:v for k,v in getattr(self, 'last_ts', {}).items() if self.ssrc_to_user.get(k) != uid}
+        self.ssrc_to_user = {k:v for k,v in self.ssrc_to_user.items() if v != uid}
     elif op == 24:  # DAVE_PREPARE_EPOCH
         if d["epoch"] == 1:
             self.dave_version = d["protocol_version"]
@@ -840,7 +845,7 @@ async def _listen(self:VoiceClient):
                 self._tries = 0
                 await self._wait_dave_ready()
                 self.resumed.set()
-            elif op > 13: await self._handle_trans(op, d)
+            elif op >= 13: await self._handle_trans(op, d)
             else: print("voice json", op, d)
         except websockets.exceptions.ConnectionClosed as e:
             if not self.running: break
@@ -1037,6 +1042,7 @@ async def play_file(self:VoiceClient, path): await self.send_pcm(file2pcm(path))
 async def disconnect(self:VoiceClient):
     "Tear down voice ws/UDP without notifying the main gateway (used when Discord already removed us)"
     self.running = False
+    if getattr(self, '_recording', False): await self.stop_recording(mix=False)
     for t in (self._hb_task, self._listen_task, self._ka_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
@@ -1095,7 +1101,7 @@ def on_error(self:Bot, f):
 @patch
 async def join_voice(self:Bot, channel):
     "Join a voice channel and return VoiceClient"
-    self.vc = VoiceClient(self.gc, channel)
+    self.vc = VoiceClient(self.gc, channel.guild_id, channel)
     await self.vc.join()
     return self.vc
 
