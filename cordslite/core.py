@@ -569,7 +569,7 @@ class VoiceClient:
 
         self.session_id = self.token = self.endpoint = None
         self.ws = self.udp = None
-        self._listen_task = self._hb_task = None
+        self._listen_task = self._hb_task = self._ka_task = None
         self.v_seq = -1
         self._tries = 0
         self.resuming = self._rejoining = False
@@ -653,10 +653,22 @@ class VoiceUDP(asyncio.DatagramProtocol):
     def datagram_received(self, data, addr): self.packets.put_nowait(data)
 
 @patch
+async def _keepalive(self:VoiceClient, interval=5):
+    "Ping the voice UDP socket so NAT mappings survive listen-only sessions"
+    n = 0
+    while self.running:
+        try: self.trans.sendto(n.to_bytes(8, 'big'))
+        except Exception: pass
+        n = (n + 1) & 0xffffffffffffffff
+        await asyncio.sleep(interval)
+
+@patch
 async def _udp(self:VoiceClient):
     self.loop = asyncio.get_running_loop()
     self.trans, self.proto = await self.loop.create_datagram_endpoint(VoiceUDP, remote_addr=(self.vip, self.vport))
     self.ip, self.port = await _ip(self.trans, self.proto, self.ssrc)
+    if self._ka_task: self._ka_task.cancel()
+    self._ka_task = asyncio.create_task(self._keepalive())
     await self.ws.send(Op.select_protocol(self.ip, self.port))
 
 @patch
@@ -1025,7 +1037,7 @@ async def play_file(self:VoiceClient, path): await self.send_pcm(file2pcm(path))
 async def disconnect(self:VoiceClient):
     "Tear down voice ws/UDP without notifying the main gateway (used when Discord already removed us)"
     self.running = False
-    for t in (self._hb_task, self._listen_task):
+    for t in (self._hb_task, self._listen_task, self._ka_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
     if getattr(self, 'trans', None): self.trans.close()
