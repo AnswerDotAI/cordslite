@@ -884,16 +884,20 @@ def decode(self:VoiceClient, pkt):
     return b''.join(fill) + dec.decode(opus, 5760)
 
 # %% ../nbs/00_core.ipynb #b02cb906
+def _write_silence(f, n_smpls, chunk=sr):
+    "Write `n_smpls` of silence to `f` in `chunk`-sample pieces (blocking; run in a thread)"
+    for i in range(0, n_smpls, chunk): f.write(silence(min(chunk, n_smpls - i)))
+
 @patch
-def _get_proc(self:VoiceClient, uid):
+async def _get_proc(self:VoiceClient, uid):
     if uid not in self._rec_procs:
         path = str(self._rec_path.with_stem(f'{self._rec_path.stem}_{uid}'))
         p = ( ffmpeg.input('pipe:', f='s16le', ar=sr, ac=n_chs)
                     .output(path)
                     .overwrite_output()
                     .run_async(pipe_stdin=True, quiet=True))
-        p.stdin.write(silence(int((time.time() - self._rec_start) * sr)))
         self._rec_procs[uid] = (p, path)
+        await asyncio.to_thread(_write_silence, p.stdin, int((time.time() - self._rec_start) * sr))
     return self._rec_procs[uid]
 
 @patch
@@ -905,8 +909,8 @@ async def _recv_audio(self:VoiceClient):
 
         ssrc = int.from_bytes(pkt[8:12], 'big')
         uid = self.ssrc_to_user.get(ssrc, ssrc)
-        p, path = self._get_proc(uid)
-        p.stdin.write(pcm)
+        p, path = await self._get_proc(uid)
+        await asyncio.to_thread(p.stdin.write, pcm)
 
 # %% ../nbs/00_core.ipynb #48763434
 @patch
@@ -934,7 +938,7 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
     speaker_paths = {}
     for uid, (p, path) in self._rec_procs.items():
         p.stdin.close()
-        p.wait()
+        await asyncio.to_thread(p.wait)
         speaker_paths[uid] = path
 
     mixed_path = None
@@ -943,11 +947,12 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
 
         if len(speaker_paths) == 1:
             src = next(iter(speaker_paths.values()))
-            ffmpeg.input(src).output(mixed_path).overwrite_output().run(quiet=True)
+            out = ffmpeg.input(src).output(mixed_path).overwrite_output()
         else:
             inputs = [ffmpeg.input(path) for path in speaker_paths.values()]
             mixed = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
-            mixed.output(mixed_path).overwrite_output().run(quiet=True)
+            out = mixed.output(mixed_path).overwrite_output()
+        await asyncio.to_thread(out.run, quiet=True)
 
     return {'speakers': speaker_paths, 'mixed': mixed_path}
 
