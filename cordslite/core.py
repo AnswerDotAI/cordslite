@@ -10,6 +10,7 @@ __all__ = ['DISCORD_WEB', 'depoch', 'evt_typs', 'spf', 'sr', 'n_chs', 'opus_sile
 
 # %% ../nbs/00_core.ipynb #9868997a
 from collections import defaultdict
+from contextlib import suppress
 from datetime import datetime, timedelta, timezone
 from fastcore.meta import *
 from fastcore.utils import *
@@ -916,10 +917,6 @@ def decode(self:VoiceClient, pkt):
     return b''.join(fill) + dec.decode(opus, 5760)
 
 # %% ../nbs/00_core.ipynb #b02cb906
-def _write_silence(f, n_smpls, chunk=sr):
-    "Write `n_smpls` of silence to `f` in `chunk`-sample pieces (blocking; run in a thread)"
-    for i in range(0, n_smpls, chunk): f.write(silence(min(chunk, n_smpls - i)))
-
 @patch
 async def _get_proc(self:VoiceClient, uid):
     if uid not in self._rec_procs:
@@ -929,7 +926,7 @@ async def _get_proc(self:VoiceClient, uid):
                     .overwrite_output()
                     .run_async(pipe_stdin=True, quiet=True))
         self._rec_procs[uid] = (p, path)
-        await asyncio.to_thread(_write_silence, p.stdin, int((time.time() - self._rec_start) * sr))
+        self._rec_offsets[uid] = max(time.time() - self._rec_start, 0)
     return self._rec_procs[uid]
 
 @patch
@@ -953,13 +950,26 @@ def start_recording(self:VoiceClient, path='/tmp/recording.mp3'):
     self.last_ts = {}
     self._rec_path = Path(path)
     self._rec_procs = {}
+    self._rec_offsets = {}
     self._rec_start = time.time()
     self._recording = True
     self._rec_task = asyncio.create_task(self._recv_audio())
     return path
 
+def _delayed_input(path, delay):
+    inp = ffmpeg.input(path)
+    if delay <= 0: return inp
+    delay = max(round(delay * 1_000), 0)
+    return inp.filter('adelay', '|'.join([str(delay)] * n_chs))
+
+async def _wait_proc(p, timeout):
+    try: return await asyncio.wait_for(asyncio.to_thread(p.wait), timeout)
+    except asyncio.TimeoutError:
+        with suppress(Exception): p.kill()
+        return await asyncio.to_thread(p.wait)
+
 @patch
-async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
+async def stop_recording(self:VoiceClient, mix=True, mix_path=None, timeout=10):
     self._recording = False
 
     if getattr(self, '_rec_task', None):
@@ -969,8 +979,8 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
 
     speaker_paths = {}
     for uid, (p, path) in self._rec_procs.items():
-        p.stdin.close()
-        await asyncio.to_thread(p.wait)
+        with suppress(BrokenPipeError, OSError, ValueError): p.stdin.close()
+        await _wait_proc(p, timeout)
         speaker_paths[uid] = path
 
     mixed_path = None
@@ -981,10 +991,10 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None):
             src = next(iter(speaker_paths.values()))
             out = ffmpeg.input(src).output(mixed_path).overwrite_output()
         else:
-            inputs = [ffmpeg.input(path) for path in speaker_paths.values()]
+            inputs = [_delayed_input(path, self._rec_offsets.get(uid, 0)) for uid,path in speaker_paths.items()]
             mixed = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
             out = mixed.output(mixed_path).overwrite_output()
-        await asyncio.to_thread(out.run, quiet=True)
+        await _wait_proc(out.run_async(quiet=True), timeout)
 
     return {'speakers': speaker_paths, 'mixed': mixed_path}
 
