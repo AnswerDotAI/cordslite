@@ -4,9 +4,9 @@
 
 # %% auto #0
 __all__ = ['DISCORD_WEB', 'depoch', 'evt_typs', 'spf', 'sr', 'n_chs', 'opus_silence', 'frame_bytes', 'DiscordClient',
-           'DiscordError', 'DiscordObject', 'Guild', 'html_table', 'Channel', 'Channels', 'Message', 'Messages',
-           'date2snowflake', 'Attachment', 'User', 'Member', 'Members', 'lbl', 'Webhook', 'Webhooks', 'GatewayClient',
-           'Op', 'Event', 'VoiceClient', 'VoiceUDP', 'silence', 'pcm2frames', 'file2pcm', 'Bot']
+           'DiscordError', 'DiscordObject', 'Guild', 'html_table', 'Channel', 'Channels', 'Guilds', 'Message',
+           'Messages', 'date2snowflake', 'Attachment', 'User', 'Member', 'Members', 'lbl', 'Webhook', 'Webhooks',
+           'GatewayClient', 'Op', 'Event', 'VoiceClient', 'VoiceUDP', 'silence', 'pcm2frames', 'file2pcm', 'Bot']
 
 # %% ../nbs/00_core.ipynb #9868997a
 from collections import defaultdict
@@ -107,6 +107,16 @@ async def channels(self:Guild, limit=None):
 @patch
 async def channel(self:DiscordClient, channel_id):
     return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
+
+# %% ../nbs/00_core.ipynb #b28c1392
+class Guilds(list):
+    def _repr_html_(self): return html_table(self, ("ID", "Name"), lambda g: (g.id, g.name))
+
+@patch
+async def guilds(self:DiscordClient, limit=None):
+    "List the guilds the bot is a member of"
+    data = await self._req('GET', '/users/@me/guilds', limit=limit)
+    return Guilds(Guild(d, self) for d in data)
 
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
