@@ -1,6 +1,6 @@
 """Load this skill when an agent needs to search, summarize, or find information in Discord using cordslite. It covers read-only workflows for connecting to Discord, opening a guild, orienting through channels, searching messages, reading threads, and fetching attachments.
 
-Connections to Discord use `DiscordClient`: `dc = DiscordClient(token=None, user_token=None)`. If `token` is `None`, cordslite reads the bot token from the `DISCORD_BOT_TOKEN` environment variable. `user_token` can be supplied for cordslite operations that support `use_user=True`, or defaults to the `DISCORD_USER_TOKEN` environment variable when present. Once connected, open a guild with `gld = await dc.guild(guild_id)`, where `guild_id` is provided by the user.
+Connections to Discord use `DiscordClient`: `dc = DiscordClient(token=None, user_token=None)`. If `token` is `None`, cordslite reads the bot token from the `DISCORD_BOT_TOKEN` environment variable. `user_token` can be supplied for cordslite operations that support `use_user=True`, or defaults to the `DISCORD_USER_TOKEN` environment variable when present. Once connected, open a guild with `gld = await dc.guild(guild_id)`, where `guild_id` is provided by the user. If the guild ID is unknown, `glds = await dc.guilds()` lists the guilds the bot is a member of.
 
 This skill treats Discord as a read-only information source. It does not cover posting, editing, deleting, creating threads, or other write operations, even when cordslite exposes those methods.
 
@@ -105,7 +105,7 @@ __all__ = [ 'DiscordClient', 'Guild', 'Channel', 'Channels', 'Message', 'Message
             'Attachment']
 
 allow(DiscordClient.__init__,
-      {DiscordClient: ['channel', 'thread', 'guild'],
+      {DiscordClient: ['channel', 'thread', 'guild', 'guilds'],
        Guild: ['channels', 'search', 'search_all', 'find_member', 'members', 'tree', 'url'],
        Channel: ['messages', 'search', 'search_all', 'url'],
        Message: ['before', 'after', 'around', 'attachments', 'url'],
