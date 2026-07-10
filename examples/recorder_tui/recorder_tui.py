@@ -27,7 +27,7 @@ from pathlib import Path
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, Input, Static, Tree
 
-from cordslite.core import Channel, DiscordClient, GatewayClient, Guild, VoiceClient
+from cordslite import Channel, DiscordClient, GatewayClient, Guild, VoiceClient
 
 INTENTS = (1 << 0) | (1 << 7)  # GUILDS | GUILD_VOICE_STATES
 
