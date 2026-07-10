@@ -2,6 +2,16 @@
 
 <!-- do not remove -->
 
+## 0.1.0
+
+### New Features
+
+- Refactor: Split core.py into gateway, voice, and bot modules ([#19](https://github.com/AnswerDotAI/cordslite/pull/19)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Robust voice/gateway reconnection with backoff, keepalive, and async recording ([#18](https://github.com/AnswerDotAI/cordslite/pull/18)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add Webhook support (create, list, edit, delete, send) and fix Guild.search channel_id access bug ([#17](https://github.com/AnswerDotAI/cordslite/issues/17))
+
+
+
 ## 0.0.14
 
 ### New Features
