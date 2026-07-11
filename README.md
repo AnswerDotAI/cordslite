@@ -7,8 +7,7 @@
 
 ### Installation
 
-Install latest from the GitHub
-[repository](https://github.com/AnswerDotAI/cordslite):
+Install latest from the GitHub [repository](https://github.com/AnswerDotAI/cordslite):
 
 ``` sh
 $ pip install git+https://github.com/AnswerDotAI/cordslite.git
@@ -26,8 +25,7 @@ $ pip install cordslite
 
 **Getting a Bot Token:**
 
-1.  Go to the [Discord Developer
-    Portal](https://discord.com/developers/applications)
+1.  Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 2.  Create an application, then go to “Bot” and create a bot
 3.  Copy the token and set it as an environment variable:
 
@@ -35,9 +33,7 @@ $ pip install cordslite
 export DISCORD_BOT_TOKEN='your_token_here'
 ```
 
-4.  Under “OAuth2 → URL Generator”, select `bot` scope, choose
-    permissions, and use the generated URL to invite the bot to your
-    server
+4.  Under “OAuth2 → URL Generator”, select `bot` scope, choose permissions, and use the generated URL to invite the bot to your server
 
 **Initialize the client:**
 
@@ -96,8 +92,7 @@ msg = await ch.send('Hello from cordslite! 🍺'); msg
 
 ### Gateway (Real-time Events)
 
-The Gateway provides real-time events via WebSocket. Connect, then
-register handlers for events like `MESSAGE_CREATE`:
+The Gateway provides real-time events via WebSocket. Connect, then register handlers for events like `MESSAGE_CREATE`:
 
 ``` python
 intents = (1 << 0) | (1 << 9) | (1 << 15)  # GUILDS | GUILD_MESSAGES | MESSAGE_CONTENT
@@ -129,9 +124,7 @@ await gc.stop()
 
 ### Bot
 
-[`Bot`](https://AnswerDotAI.github.io/cordslite/bot.html#bot) ties REST
-and Gateway together with a decorator-based command router. The function
-name becomes the command name, prefixed with `!` in Discord:
+[`Bot`](https://AnswerDotAI.github.io/cordslite/bot.html#bot) ties REST and Gateway together with a decorator-based command router. The function name becomes the command name, prefixed with `!` in Discord:
 
 ``` python
 bot = Bot(intents)
@@ -159,8 +152,7 @@ await bot.stop()
 
     Gateway stopped!
 
-Errors in command handlers are caught and stored in `bot.errors` for
-debugging. You can also register a real-time error handler:
+Errors in command handlers are caught and stored in `bot.errors` for debugging. You can also register a real-time error handler:
 
 ### Voice
 
