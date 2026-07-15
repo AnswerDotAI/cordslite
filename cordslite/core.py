@@ -20,10 +20,11 @@ import asyncio,httpx,json,os,re
 # %% ../nbs/00_core.ipynb #d9e0f6cf
 class DiscordClient:
     def __init__(self, token=None, user_token=None, name='cordslite', ver='0.1'):
-        self.token = token or os.environ['DISCORD_BOT_TOKEN']
+        self.token = token or os.environ.get('DISCORD_BOT_TOKEN')
         self.user_token = user_token or os.environ.get('DISCORD_USER_TOKEN')
         self.base_url = 'https://discord.com/api/v10'
-        self.headers = {'Authorization': f'Bot {self.token}', 'User-Agent': f'DiscordBot ({name}, {ver})'}
+        auth = self.user_token if not self.token else f'Bot {self.token}'
+        self.headers = {'Authorization': auth, 'User-Agent': f'DiscordBot ({name}, {ver})'}
         self.cli = httpx.AsyncClient(base_url=self.base_url, headers=self.headers)
 
 
@@ -35,12 +36,13 @@ class DiscordError(Exception):
 @patch
 async def _req(self:DiscordClient, method, path, data=None, files=None, use_user=False, **kw):
     kw = filter_values(kw, negate(is_(None)))
-    if method=='GET': params,json = kw,None
-    else: params,json = None,kw
+    headers = None
     if use_user:
         if not self.user_token: raise ValueError("User token required for this operation")
-        kw['headers'] = {'Authorization': self.user_token}
-    r = await self.cli.request(method, path, data=data, files=files, params=params, json=json)
+        headers = {'Authorization': self.user_token}
+    if method=='GET': params,json = kw,None
+    else: params,json = None,kw
+    r = await self.cli.request(method, path, data=data, files=files, params=params, json=json, headers=headers)
     if r.status_code == 429:
         await asyncio.sleep(float(r.headers.get('Retry-After', 1))+0.1)
         return await self._req(method, path, use_user=use_user, **kw)
