@@ -341,6 +341,24 @@ async def join(self:VoiceClient, debug=False):
     await self._open_ws()
 
 
+# %% ../nbs/02_voice.ipynb #d70ab2e3
+@patch
+async def disconnect(self:VoiceClient):
+    "Tear down voice ws/UDP without notifying the main gateway (used when Discord already removed us)"
+    self.running = False
+    for t in (self._hb_task, self._ka_task, self._listen_task):
+        if t: t.cancel()
+    if self.ws: await self.ws.close()
+    if getattr(self, 'trans', None): self.trans.close()
+    self.reset_audio()
+
+@patch
+async def leave(self:VoiceClient):
+    "Notify the main gateway that we are leaving the voice channel, then tear down the connection"
+    self.running = False
+    await self.gc.ws.send(Op.voice_state(self.gid, None))  # channel_id null = leave
+    await self.disconnect()
+
 # %% ../nbs/02_voice.ipynb #a85103be
 @patch
 def decrypt(self:VoiceClient, pkt, uid):
@@ -428,11 +446,24 @@ def _delayed_input(path, delay):
     delay = max(round(delay * 1_000), 0)
     return inp.filter('adelay', '|'.join([str(delay)] * n_chs))
 
-async def _wait_proc(p, timeout):
+async def _wait_proc(p, timeout=None):
     try: return await asyncio.wait_for(asyncio.to_thread(p.wait), timeout)
     except asyncio.TimeoutError:
         with suppress(Exception): p.kill()
         return await asyncio.to_thread(p.wait)
+
+@patch
+async def mix_recording(self:VoiceClient, mix_path=None, timeout=None, **out_kw):
+    "Mix the finalized per-speaker files into one recording at `mix_path`, offsetting late joiners; `out_kw` passes ffmpeg output options"
+    speaker_paths = {uid: path for uid,(p,path) in self._rec_procs.items()}
+    if not speaker_paths: return None
+    mixed_path = str(mix_path or self._rec_path.with_stem(f'{self._rec_path.stem}_mixed'))
+    if len(speaker_paths) == 1: out = ffmpeg.input(next(iter(speaker_paths.values())))
+    else:
+        inputs = [_delayed_input(path, self._rec_offsets.get(uid, 0)) for uid,path in speaker_paths.items()]
+        out = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
+    await _wait_proc(out.output(mixed_path, **out_kw).overwrite_output().run_async(quiet=True), timeout)
+    return mixed_path
 
 @patch
 async def stop_recording(self:VoiceClient, mix=True, mix_path=None, timeout=10):
@@ -449,19 +480,7 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None, timeout=10):
         await _wait_proc(p, timeout)
         speaker_paths[uid] = path
 
-    mixed_path = None
-    if mix and speaker_paths:
-        mixed_path = str(mix_path or self._rec_path.with_stem(f'{self._rec_path.stem}_mixed'))
-
-        if len(speaker_paths) == 1:
-            src = next(iter(speaker_paths.values()))
-            out = ffmpeg.input(src).output(mixed_path).overwrite_output()
-        else:
-            inputs = [_delayed_input(path, self._rec_offsets.get(uid, 0)) for uid,path in speaker_paths.items()]
-            mixed = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
-            out = mixed.output(mixed_path).overwrite_output()
-        await _wait_proc(out.run_async(quiet=True), timeout)
-
+    mixed_path = await self.mix_recording(mix_path) if mix and speaker_paths else None
     return {'speakers': speaker_paths, 'mixed': mixed_path}
 
 # %% ../nbs/02_voice.ipynb #8af813d2
