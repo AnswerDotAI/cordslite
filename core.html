@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>cordslite API – cordslite</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b38bfc58f0732c5acf3d85c920ebea91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="cordslite API – cordslite">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="cordslite">
+<meta name="twitter:title" content="cordslite API – cordslite">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">cordslite</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">cordslite API</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">cordslite 🍺</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">cordslite API</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./gateway.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gateway API</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./voice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Voice API</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bots</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#rest-endpoints" id="toc-rest-endpoints" class="nav-link active" data-scroll-target="#rest-endpoints">REST endpoints</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/AnswerDotAI/cordslite/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="core.html.md"><i class="bi bi-file-code"></i>Markdown</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">cordslite API</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div id="9868997a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta, timezone</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fasthtml.common <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> asyncio,httpx,json,os,re</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Discord has three main APIs: - <strong>REST API</strong> - for actions (send message, get channels, fetch history). Request/response style. - <strong>Gateway API</strong> - for real-time events via WebSocket (new messages, reactions, user joins). - <strong>Voice API</strong> - for real-time streaming of audio via UDP</p>
+<p>We start with the REST API. To use it, you need a <strong>bot token</strong> from the <a href="https://discord.com/developers/applications">Discord Developer Portal</a>: 1. Create an application 2. Go to “Bot” section and create a bot 3. Copy the token (keep it secret!) 4. Under “OAuth2 → URL Generator”, select <code>bot</code> scope and choose permissions (e.g., <code>Send Messages</code>, <code>Read Message History</code>) 5. Use the generated URL to invite the bot to your server</p>
+<p>The <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordclient"><code>DiscordClient</code></a> wraps <code>httpx.Client</code> with Discord’s base URL (<code>https://discord.com/api/v10</code>) and auth headers pre-configured.</p>
+<div id="d9e0f6cf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DiscordClient:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, token<span class="op">=</span><span class="va">None</span>, user_token<span class="op">=</span><span class="va">None</span>, name<span class="op">=</span><span class="st">'cordslite'</span>, ver<span class="op">=</span><span class="st">'0.1'</span>):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.token <span class="op">=</span> token <span class="kw">or</span> os.environ.get(<span class="st">'DISCORD_BOT_TOKEN'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.user_token <span class="op">=</span> user_token <span class="kw">or</span> os.environ.get(<span class="st">'DISCORD_USER_TOKEN'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.base_url <span class="op">=</span> <span class="st">'https://discord.com/api/v10'</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        auth <span class="op">=</span> <span class="va">self</span>.user_token <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.token <span class="cf">else</span> <span class="ss">f'Bot </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>token<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.headers <span class="op">=</span> {<span class="st">'Authorization'</span>: auth, <span class="st">'User-Agent'</span>: <span class="ss">f'DiscordBot (</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>ver<span class="sc">}</span><span class="ss">)'</span>}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cli <span class="op">=</span> httpx.AsyncClient(base_url<span class="op">=</span><span class="va">self</span>.base_url, headers<span class="op">=</span><span class="va">self</span>.headers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The token defaults to the <code>DISCORD_BOT_TOKEN</code> environment variable if none is provided.</p>
+<div id="55df80ed" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dc <span class="op">=</span> DiscordClient()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="rest-endpoints" class="level2">
+<h2 class="anchored" data-anchor-id="rest-endpoints">REST endpoints</h2>
+<p>Every REST call goes through <code>_req</code>, which handles two concerns automatically: - <strong>Rate limiting</strong> — if Discord returns <code>429 Too Many Requests</code>, we wait the <code>Retry-After</code> duration and retry. - <strong>Error handling</strong> — non-2xx responses are raised as <a href="https://AnswerDotAI.github.io/cordslite/core.html#discorderror"><code>DiscordError</code></a> with Discord’s error code, message, and HTTP status, so callers don’t need to check responses manually.</p>
+<div id="cb503de5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DiscordError(<span class="pp">Exception</span>):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, code, msg, status): <span class="va">self</span>.code,<span class="va">self</span>.msg,<span class="va">self</span>.status <span class="op">=</span> code,msg,status</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"DiscordError(</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>status<span class="sc">}</span><span class="ss">): [</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>code<span class="sc">}</span><span class="ss">] </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>msg<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> _req(<span class="va">self</span>:DiscordClient, method, path, data<span class="op">=</span><span class="va">None</span>, files<span class="op">=</span><span class="va">None</span>, use_user<span class="op">=</span><span class="va">False</span>, <span class="op">**</span>kw):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    kw <span class="op">=</span> filter_values(kw, negate(is_(<span class="va">None</span>)))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    headers <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_user:</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.user_token: <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"User token required for this operation"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        headers <span class="op">=</span> {<span class="st">'Authorization'</span>: <span class="va">self</span>.user_token}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> method<span class="op">==</span><span class="st">'GET'</span>: params,json <span class="op">=</span> kw,<span class="va">None</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>: params,json <span class="op">=</span> <span class="va">None</span>,kw</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>.cli.request(method, path, data<span class="op">=</span>data, files<span class="op">=</span>files, params<span class="op">=</span>params, json<span class="op">=</span>json, headers<span class="op">=</span>headers)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> r.status_code <span class="op">==</span> <span class="dv">429</span>:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.sleep(<span class="bu">float</span>(r.headers.get(<span class="st">'Retry-After'</span>, <span class="dv">1</span>))<span class="op">+</span><span class="fl">0.1</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>._req(method, path, use_user<span class="op">=</span>use_user, <span class="op">**</span>kw)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> r.status_code <span class="op">&gt;=</span> <span class="dv">400</span>:</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: d <span class="op">=</span> r.json()</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span>: d <span class="op">=</span> {}</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> DiscordError(d.get(<span class="st">'code'</span>, <span class="dv">0</span>), d.get(<span class="st">'message'</span>, r.text[:<span class="dv">200</span>]), r.status_code)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> r.status_code <span class="op">==</span> <span class="dv">204</span>: <span class="cf">return</span> <span class="st">'done'</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: <span class="cf">return</span> r.json()</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e: <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="ss">f"Failed to parse response: </span><span class="sc">{</span>r<span class="sc">.</span>text<span class="sc">}</span><span class="ss">; </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Discord’s REST endpoints return JSON with many fields. Rather than defining properties for every field, we use a flexible base class pattern:</p>
+<p><a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a> provides <code>__getitem__</code> and <code>__getattr__</code> so you can access data as <code>obj.name</code> or <code>obj['name']</code>. The <code>__dir__</code> method enables autocomplete in notebooks and solveit dialogs—just type <code>obj.</code> and see all available fields!</p>
+<p>This means when Discord adds new fields to their API, our code automatically supports them without changes.</p>
+<div id="fafdfb4b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DiscordObject(AttrDict):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, data, client):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(data)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._client <span class="op">=</span> <span class="bu">getattr</span>(client, <span class="st">'_client'</span>, client)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._parent <span class="op">=</span> client</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, meth, path, <span class="op">**</span>kw): <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>._client._req(meth, path, <span class="op">**</span>kw)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> obj(<span class="va">self</span>, nm, d): <span class="cf">return</span> <span class="bu">globals</span>()[nm](d, <span class="va">self</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> coll(<span class="va">self</span>, nm, ds): <span class="cf">return</span> <span class="bu">globals</span>()[nm<span class="op">+</span><span class="st">'s'</span>](<span class="va">self</span>.obj(nm,d) <span class="cf">for</span> d <span class="kw">in</span> ds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Discord’s hierarchy is <strong>Guild → Channels → Messages</strong>. A Guild (server) contains channels, and channels contain messages. Each has its own REST endpoints: - <code>GET /guilds/{id}</code> - fetch guild info - <code>GET /guilds/{id}/channels</code> - list channels - <code>GET /channels/{id}/messages</code> - fetch messages - <code>POST /channels/{id}/messages</code> - send a message</p>
+<p>We build wrapper classes for each, inheriting from <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a> and just adding a nice <code>__repr__</code>.</p>
+<div id="e22aa99c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Guild(DiscordObject):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"Guild(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">, name=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">!r}</span><span class="ss">)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We use <code>@patch</code> from fastcore to add methods incrementally—great for interactive development where you want to test each piece as you build it. This <code>guild</code> method fetches guild data and wraps it in our <a href="https://AnswerDotAI.github.io/cordslite/core.html#guild"><code>Guild</code></a> class.</p>
+<div id="0aa23bb9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> guild(<span class="va">self</span>:DiscordClient, guild_id):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Guild(<span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span>guild_id<span class="sc">}</span><span class="ss">'</span>), <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="be1b9822" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gid <span class="op">=</span> <span class="st">'1493461895615873044'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gld <span class="op">=</span> <span class="cf">await</span> dc.guild(gid)<span class="op">;</span> gld</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="prose" data-markdown="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Guild(<span class="bu">id</span><span class="op">=</span><span class="dv">1327046393453613076</span>, name<span class="op">=</span><span class="st">"natedog's server"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Channels have a <code>type</code> field: 0=text, 2=voice, 4=category. The <a href="https://AnswerDotAI.github.io/cordslite/core.html#channels"><code>Channels</code></a> class inherits from <code>list</code> and adds <code>_repr_html_</code> for nice table display in notebooks/solveit. This pattern—a wrapper class plus a collection class with HTML repr—makes exploring the API much more pleasant.</p>
+<div id="523e4a31" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> html_table(items, hdrs, fn):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> items: <span class="cf">return</span> <span class="st">""</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> (Tr(<span class="bu">map</span>(Td, fn(o))) <span class="cf">for</span> o <span class="kw">in</span> items)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> to_xml(Table(Thead(Tr(<span class="bu">map</span>(Th, hdrs))), Tbody(rows), cls<span class="op">=</span><span class="st">"prose"</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Channel(DiscordObject):</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> guild(<span class="va">self</span>):</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(<span class="va">self</span>, <span class="st">'_gld'</span>): <span class="va">self</span>._gld <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>._client.guild(<span class="va">self</span>.guild_id)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._gld</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"Channel(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">, name=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">!r}</span><span class="ss">, type=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">type</span><span class="sc">}</span><span class="ss">)"</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Channels(<span class="bu">list</span>):</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>): <span class="cf">return</span> html_table(<span class="va">self</span>, (<span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"Type"</span>), <span class="kw">lambda</span> c: (c.<span class="bu">id</span>, c.name, c.<span class="bu">type</span>))</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> channels(<span class="va">self</span>:Guild, limit<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/channels'</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> limit: data <span class="op">=</span> data[:limit]</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Channel'</span>, data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="72d0c235" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>chs <span class="op">=</span> <span class="cf">await</span> gld.channels()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>chs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1327046393453613077</td>
+<td>Text Channels</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>1327046393453613078</td>
+<td>Voice Channels</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>1327046393453613079</td>
+<td>general</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1327046393453613080</td>
+<td>General</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>1327954661960978512</td>
+<td>private</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1475600987627458812</td>
+<td>forwarded</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>1501265913222266961</td>
+<td>test-webhooks</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1506656999293849753</td>
+<td>test</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>1506657701688508456</td>
+<td>test-vch</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="eded7bca" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> channel(<span class="va">self</span>:DiscordClient, channel_id):</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Channel(<span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'GET'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span>channel_id<span class="sc">}</span><span class="ss">'</span>), <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Sometimes you don’t know the guild ID up front. <code>dc.guilds()</code> lists every guild the bot has been invited to, using Discord’s <code>/users/@me/guilds</code> endpoint (which returns partial guild objects—<code>id</code>, <code>name</code>, <code>owner</code>, <code>permissions</code>). Handy for building navigation UIs without hardcoding IDs.</p>
+<div id="b28c1392" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Guilds(<span class="bu">list</span>):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>): <span class="cf">return</span> html_table(<span class="va">self</span>, (<span class="st">"ID"</span>, <span class="st">"Name"</span>), <span class="kw">lambda</span> g: (g.<span class="bu">id</span>, g.name))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> guilds(<span class="va">self</span>:DiscordClient, limit<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"List the guilds the bot is a member of"</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'GET'</span>, <span class="st">'/users/@me/guilds'</span>, limit<span class="op">=</span>limit)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Guilds(Guild(d, <span class="va">self</span>) <span class="cf">for</span> d <span class="kw">in</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1abf5b92" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>glds <span class="op">=</span> <span class="cf">await</span> dc.guilds()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">any</span>(g.<span class="bu">id</span> <span class="op">==</span> gid <span class="cf">for</span> g <span class="kw">in</span> glds)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>glds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1200111522916094103</td>
+<td>Answer.ai</td>
+</tr>
+<tr class="even">
+<td>1311580085442318366</td>
+<td>erikgaas's server</td>
+</tr>
+<tr class="odd">
+<td>1327046393453613076</td>
+<td>natedog's server</td>
+</tr>
+<tr class="even">
+<td>1344332715226300458</td>
+<td>Kerem's server</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="7f0e4b3e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>chid <span class="op">=</span> <span class="st">'1493461896139903028'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ch <span class="op">=</span> <span class="cf">await</span> dc.channel(chid)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Messages are the core of most bot functionality. Note that Discord returns messages in reverse chronological order (newest first), so we <code>reverse()</code> the data to get chronological order. The table shows a preview of content, author, and timestamp.</p>
+<p>Note: To read message content, your bot needs the <code>MESSAGE_CONTENT</code> privileged intent enabled in the Developer Portal! Without it, the <code>content</code> field will be empty for messages not sent by your bot or mentioning it.</p>
+<div id="461bcb8b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Message(DiscordObject):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, data, dobj):</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(data, dobj)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.raw_content <span class="op">=</span> <span class="va">self</span>.content</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        mentions <span class="op">=</span> {m[<span class="st">'id'</span>]: m[<span class="st">'username'</span>] <span class="cf">for</span> m <span class="kw">in</span> data.get(<span class="st">'mentions'</span>, [])}</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> repl(m): <span class="cf">return</span> <span class="ss">f"@</span><span class="sc">{</span>mentions<span class="sc">.</span>get(m.group(<span class="dv">1</span>), <span class="st">'unknown'</span>)<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>[<span class="st">'content'</span>] <span class="op">=</span> re.sub(<span class="vs">r'&lt;@!</span><span class="op">?</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="kw">)</span><span class="vs">&gt;'</span>, repl, <span class="va">self</span>.content)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        author <span class="op">=</span> <span class="va">self</span>.author[<span class="st">'username'</span>]</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        preview <span class="op">=</span> <span class="va">self</span>.content[:<span class="dv">30</span>] <span class="op">+</span> <span class="st">'…'</span> <span class="cf">if</span> <span class="bu">len</span>(<span class="va">self</span>.content) <span class="op">&gt;</span> <span class="dv">30</span> <span class="cf">else</span> <span class="va">self</span>.content</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"Message(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">, author=</span><span class="sc">{</span>author<span class="sc">!r}</span><span class="ss">, content=</span><span class="sc">{</span>preview<span class="sc">!r}</span><span class="ss">)"</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> channel(<span class="va">self</span>):</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(<span class="va">self</span>, <span class="st">'_ch'</span>): <span class="va">self</span>._ch <span class="op">=</span> Channel(<span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>channel_id<span class="sc">}</span><span class="ss">'</span>), <span class="va">self</span>._client)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._ch</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Messages(<span class="bu">list</span>):</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>):</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> html_table(<span class="va">self</span>, (<span class="st">"ID"</span>, <span class="st">"Author"</span>, <span class="st">"Content"</span>, <span class="st">"Date"</span>),</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> m: (m.<span class="bu">id</span>, m.author[<span class="st">'username'</span>], m.content[:<span class="dv">50</span>], m.timestamp[:<span class="dv">10</span>]))</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> messages(<span class="va">self</span>:Channel, limit<span class="op">=</span><span class="dv">50</span>, before<span class="op">=</span><span class="va">None</span>, after<span class="op">=</span><span class="va">None</span>, around<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch channel messages. `before`, `after`, and `around` are mutually exclusive message IDs."</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">sum</span>(x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">for</span> x <span class="kw">in</span> [before, after, around]) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Pass only one of `before`, `after`, or `around`"</span>)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> mid(x): <span class="cf">return</span> x.<span class="bu">id</span> <span class="cf">if</span> <span class="bu">isinstance</span>(x, Message) <span class="cf">else</span> x</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages'</span>,</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>                      limit<span class="op">=</span>limit, before<span class="op">=</span>mid(before), after<span class="op">=</span>mid(after), around<span class="op">=</span>mid(around))</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Message'</span>, <span class="bu">reversed</span>(data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="4c84a74c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>msgs <span class="op">=</span> <span class="cf">await</span> ch.messages(<span class="dv">5</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>msgs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1507463593162047658</td>
+<td>DBuddy</td>
+<td>Test our event listener! Otters are awesome 🦦</td>
+<td>2026-05-22</td>
+</tr>
+<tr class="even">
+<td>1507463611893809202</td>
+<td>DBuddy</td>
+<td>Houston, do we have a problem?</td>
+<td>2026-05-22</td>
+</tr>
+<tr class="odd">
+<td>1507463630873039008</td>
+<td>DBuddy</td>
+<td>Did we re-identify?</td>
+<td>2026-05-22</td>
+</tr>
+<tr class="even">
+<td>1523685329700393064</td>
+<td>DBuddy</td>
+<td>cordslite voice-robustness validation: gateway res</td>
+<td>2026-07-06</td>
+</tr>
+<tr class="odd">
+<td>1523696905593557075</td>
+<td>DBuddy</td>
+<td>Back from the dead? (listener auto-resume)</td>
+<td>2026-07-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="a0695db1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> before(<span class="va">self</span>:Message, limit<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch messages before this message in the same channel/thread."</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> (<span class="cf">await</span> <span class="va">self</span>.channel).messages(before<span class="op">=</span><span class="va">self</span>, limit<span class="op">=</span>limit)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> after(<span class="va">self</span>:Message, limit<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch messages after this message in the same channel/thread."</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> (<span class="cf">await</span> <span class="va">self</span>.channel).messages(after<span class="op">=</span><span class="va">self</span>, limit<span class="op">=</span>limit)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> around(<span class="va">self</span>:Message, limit<span class="op">=</span><span class="dv">11</span>):</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch messages around this message in the same channel/thread."</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> (<span class="cf">await</span> <span class="va">self</span>.channel).messages(around<span class="op">=</span><span class="va">self</span>, limit<span class="op">=</span>limit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="4a8fbfdb" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>DISCORD_WEB <span class="op">=</span> <span class="st">'https://discord.com/channels'</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span>(as_prop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> url(<span class="va">self</span>:Guild): <span class="cf">return</span> <span class="ss">f'</span><span class="sc">{</span>DISCORD_WEB<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span>(as_prop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> url(<span class="va">self</span>:Channel): <span class="cf">return</span> <span class="ss">f'</span><span class="sc">{</span>DISCORD_WEB<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>guild_id<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span>(as_prop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> url(<span class="va">self</span>:Message):</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    gid <span class="op">=</span> <span class="va">self</span>.get(<span class="st">'guild_id'</span>) <span class="kw">or</span> <span class="va">self</span>._parent.get(<span class="st">'guild_id'</span>) <span class="kw">or</span> <span class="va">self</span>._parent.<span class="bu">id</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f'</span><span class="sc">{</span>DISCORD_WEB<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>gid<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>channel_id<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="e491ad2b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>gld.url, ch.url, msgs[<span class="dv">0</span>].url</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>('https://discord.com/channels/1327046393453613076',
+ 'https://discord.com/channels/1327046393453613076/1327046393453613079',
+ 'https://discord.com/channels/1327046393453613076/1327046393453613079/1507463593162047658')</code></pre>
+</div>
+</div>
+<p>Guild search uses snowflake IDs for date filtering (<code>min_id</code>/<code>max_id</code>), but we autoconvert <code>'YYYY-MM-DD'</code> strings for convenience for <code>before/after</code>.</p>
+<div id="e589948c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>depoch <span class="op">=</span> <span class="dv">1420070400000</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date2snowflake(date_str):</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Convert 'YYYY-MM-DD' to a Discord snowflake ID"</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> datetime.fromisoformat(date_str).replace(tzinfo<span class="op">=</span>timezone.utc)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">str</span>(<span class="bu">int</span>((dt.timestamp() <span class="op">*</span> <span class="dv">1000</span> <span class="op">-</span> depoch) <span class="op">*</span> (<span class="dv">2</span><span class="op">**</span><span class="dv">22</span>)))</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search(<span class="va">self</span>:Guild, content<span class="op">=</span><span class="va">None</span>, author_id<span class="op">=</span><span class="va">None</span>, channel_id<span class="op">=</span><span class="va">None</span>, mentions<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                 has<span class="op">=</span><span class="va">None</span>, before<span class="op">=</span><span class="va">None</span>, after<span class="op">=</span><span class="va">None</span>, pinned<span class="op">=</span><span class="va">None</span>, sort_by<span class="op">=</span><span class="va">None</span>, sort_order<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                   offset<span class="op">=</span><span class="va">None</span>, limit<span class="op">=</span><span class="va">None</span>, use_user<span class="op">=</span><span class="va">False</span>, nothread:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> before <span class="kw">and</span> <span class="kw">not</span> <span class="bu">str</span>(before).isdigit(): before <span class="op">=</span> date2snowflake(before)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> after <span class="kw">and</span> <span class="kw">not</span> <span class="bu">str</span>(after).isdigit(): after <span class="op">=</span> date2snowflake(after)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages/search'</span>, use_user<span class="op">=</span>use_user,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        content<span class="op">=</span>content, author_id<span class="op">=</span>author_id, channel_id<span class="op">=</span>channel_id,</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        mentions<span class="op">=</span>mentions, has<span class="op">=</span>has, min_id<span class="op">=</span>after, max_id<span class="op">=</span>before, pinned<span class="op">=</span>pinned,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        sort_by<span class="op">=</span>sort_by, sort_order<span class="op">=</span>sort_order, offset<span class="op">=</span>offset, limit<span class="op">=</span>limit)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    msgs <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> [m[<span class="dv">0</span>] <span class="cf">for</span> m <span class="kw">in</span> r[<span class="st">'messages'</span>]]</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> (nothread <span class="kw">and</span> channel_id <span class="kw">and</span> m[<span class="st">'channel_id'</span>] <span class="op">!=</span> channel_id)]</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Message'</span>, msgs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="a9e55153" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>msgs <span class="op">=</span> <span class="cf">await</span> gld.search(after<span class="op">=</span><span class="st">'2026-02-16'</span>, limit<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>msgs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1523696905593557075</td>
+<td>DBuddy</td>
+<td>Back from the dead? (listener auto-resume)</td>
+<td>2026-07-06</td>
+</tr>
+<tr class="even">
+<td>1523685329700393064</td>
+<td>DBuddy</td>
+<td>cordslite voice-robustness validation: gateway res</td>
+<td>2026-07-06</td>
+</tr>
+<tr class="odd">
+<td>1516773826589888522</td>
+<td>Captain Hook</td>
+<td>Usage logging failed for instance -1: instance[-1]</td>
+<td>2026-06-17</td>
+</tr>
+<tr class="even">
+<td>1516773813948518441</td>
+<td>Captain Hook</td>
+<td>Usage billing failed: 0 row(s) completed, usage_id</td>
+<td>2026-06-17</td>
+</tr>
+<tr class="odd">
+<td>1516773578807316492</td>
+<td>Captain Hook</td>
+<td>Usage logging failed for instance -1: instance[-1]</td>
+<td>2026-06-17</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Sometimes you need to search by name rather than snowflake ID. <code>find_member</code> searches the guild’s members by username, nickname, or display name using Discord’s member search endpoint, and returns the first match’s user ID. This makes it easy to chain into <code>search</code>.</p>
+<div id="44642992" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> find_member(<span class="va">self</span>:Guild, name):</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Search guild members by name/nick, return first match's user ID or None"</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>( <span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/members/search'</span>, query<span class="op">=</span>name, limit<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data[<span class="dv">0</span>][<span class="st">'user'</span>][<span class="st">'id'</span>] <span class="cf">if</span> data <span class="cf">else</span> <span class="va">None</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="aafd6bef" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>uid <span class="op">=</span> <span class="cf">await</span> gld.find_member(<span class="st">'nate.dawgg'</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> uid</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> gld.search(author_id<span class="op">=</span>uid, limit<span class="op">=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1506695870760878161</td>
+<td>nate.dawgg</td>
+<td></td>
+<td>2026-05-20</td>
+</tr>
+<tr class="even">
+<td>1503844716091936919</td>
+<td>nate.dawgg</td>
+<td></td>
+<td>2026-05-12</td>
+</tr>
+<tr class="odd">
+<td>1483815592933720094</td>
+<td>nate.dawgg</td>
+<td></td>
+<td>2026-03-18</td>
+</tr>
+<tr class="even">
+<td>1483812396307976363</td>
+<td>nate.dawgg</td>
+<td></td>
+<td>2026-03-18</td>
+</tr>
+<tr class="odd">
+<td>1481403515963183155</td>
+<td>nate.dawgg</td>
+<td></td>
+<td>2026-03-11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Sending messages is a POST request with JSON body. Pass <code>reply_id</code> to thread a reply under an existing message. For file attachments, we switch to <code>multipart/form-data</code>—Discord expects a <code>payload_json</code> field with the message JSON, plus <code>files[n]</code> fields for each file.</p>
+<div id="cc5bd70d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> send(<span class="va">self</span>:Channel, content<span class="op">=</span><span class="st">''</span>, files<span class="op">=</span><span class="va">None</span>, reply_id<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Send a message with optional file attachments"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages'</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    mref <span class="op">=</span> {<span class="st">'message_id'</span>: reply_id} <span class="cf">if</span> reply_id <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    payload <span class="op">=</span> filter_values(<span class="bu">dict</span>(content<span class="op">=</span>content, message_reference<span class="op">=</span>mref), negate(is_(<span class="va">None</span>)))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    fs <span class="op">=</span> [(<span class="st">'files[</span><span class="sc">%d</span><span class="st">]'</span> <span class="op">%</span> i, (f.name, f.read_bytes(), <span class="va">None</span>)) <span class="cf">for</span> i,f <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">map</span>(Path, listify(files)))]</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'POST'</span>, path, data<span class="op">=</span>{<span class="st">'payload_json'</span>: json.dumps(payload)}, files<span class="op">=</span>fs)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Message(r, <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="9a511736" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">'Hi, from Solveit!'</span>)<span class="op">;</span> msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="prose" data-markdown="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1524525340767289389</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Hi, from Solveit!'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="76672565" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>reply_msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">"I'm replying to myself 🤓"</span>, reply_id<span class="op">=</span>msg.<span class="bu">id</span>)<span class="op">;</span> reply_msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="prose" data-markdown="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1524525362850304280</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">"I'm replying to myself 🤓"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="bbc96a49" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> msg.channel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="prose" data-markdown="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Channel(<span class="bu">id</span><span class="op">=</span><span class="dv">1327046393453613079</span>, name<span class="op">=</span><span class="st">'general'</span>, <span class="bu">type</span><span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="5ff86195" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> <span class="cf">await</span> ch.send(<span class="st">'Here is a file!'</span>, files<span class="op">=</span>[<span class="st">'../README.md'</span>])<span class="op">;</span> msg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<div class="prose" data-markdown="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Message(<span class="bu">id</span><span class="op">=</span><span class="dv">1524525372698529911</span>, author<span class="op">=</span><span class="st">'DBuddy'</span>, content<span class="op">=</span><span class="st">'Here is a file!'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="9e14fc6c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="at">@delegates</span>(Guild.search, but<span class="op">=</span>[<span class="st">'channel_id'</span>])</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search(<span class="va">self</span>:Channel, <span class="op">**</span>kwargs): <span class="cf">return</span> <span class="cf">await</span> (<span class="cf">await</span> <span class="va">self</span>.guild).search(channel_id<span class="op">=</span><span class="va">self</span>.<span class="bu">id</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="a7aacf59" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> ch.search(has<span class="op">=</span><span class="st">'file'</span>, limit<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Author</th>
+<th data-quarto-table-cell-role="th">Content</th>
+<th data-quarto-table-cell-role="th">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1507463577617825936</td>
+<td>DBuddy</td>
+<td>Here is a file!</td>
+<td>2026-05-22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Discord messages can have file attachments. The <a href="https://AnswerDotAI.github.io/cordslite/core.html#attachment"><code>Attachment</code></a> class wraps them as <a href="https://AnswerDotAI.github.io/cordslite/core.html#discordobject"><code>DiscordObject</code></a>s—giving you attribute access to <code>filename</code>, <code>size</code>, <code>content_type</code>, <code>url</code>, etc. The <code>fetch</code> method downloads the file content using the existing httpx client.</p>
+<div id="fd998c99" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Attachment(DiscordObject):</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> fetch(<span class="va">self</span>): <span class="cf">return</span> (<span class="cf">await</span> <span class="va">self</span>._client.cli.get(<span class="va">self</span>.url)).content</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"Attachment(filename=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>filename<span class="sc">!r}</span><span class="ss">, size=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>size<span class="sc">}</span><span class="ss">, type=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>content_type<span class="sc">}</span><span class="ss">)"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>):</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.content_type.startswith(<span class="st">'image/'</span>):</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f'&lt;img src="</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>url<span class="sc">}</span><span class="ss">" style="max-width:400px"&gt;&lt;br&gt;&lt;small&gt;</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>filename<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>size<span class="sc">:,}</span><span class="ss">B)&lt;/small&gt;'</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f'&lt;code&gt;</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>filename<span class="sc">}</span><span class="ss">&lt;/code&gt; (</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>content_type<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>size<span class="sc">:,}</span><span class="ss">B)'</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span>(as_prop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> attachments(<span class="va">self</span>:Message): <span class="cf">return</span> [Attachment(a, <span class="va">self</span>._client) <span class="cf">for</span> a <span class="kw">in</span> <span class="va">self</span>.get(<span class="st">'attachments'</span>, [])]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1881100a" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>atts <span class="op">=</span> msg.attachments<span class="op">;</span> atts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>[Attachment(filename='README.md', size=28163, type=text/markdown; charset=utf-8)]</code></pre>
+</div>
+</div>
+<div id="05be9e74" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>readme <span class="op">=</span> (<span class="cf">await</span> atts[<span class="dv">0</span>].fetch()).decode()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(readme[:<span class="dv">16</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># cordslite 🍺
+
+
+</code></pre>
+</div>
+</div>
+<p>DMs (Direct Messages) are just regular channels in Discord’s API — no special handling needed! To start a DM conversation, POST to <code>/users/@me/channels</code> with a <code>recipient_id</code>. Discord returns a standard channel object, so <code>send()</code> and <code>messages()</code> work exactly as they do for guild channels.</p>
+<p>To detect DMs in the gateway, check for the absence of <code>guild_id</code> — DM messages don’t belong to any guild, so this field is missing or <code>None</code>. This makes it easy to route DM vs guild messages in your bot’s handler.</p>
+<div id="acf92bc2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> create_dm(<span class="va">self</span>:DiscordClient, user_id):</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'POST'</span>, <span class="st">'/users/@me/channels'</span>, recipient_id<span class="op">=</span>user_id)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Channel(r, <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d328d811" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Commented out so we don't spam Nate</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dm = await dc.create_dm('346450717025894400')  # nathan's user ID</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># await dm.send('Hello from DMs!')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Members vs Users: A <strong>User</strong> is a global Discord account. A <strong>Member</strong> is a user <em>within a specific guild</em>—it has guild-specific data like nickname, roles, and join date. The <code>nick or user['username']</code> pattern shows the server nickname if set, otherwise falls back to the global username.</p>
+<p>Note: The members endpoint requires the <code>GUILD_MEMBERS</code> privileged intent enabled in your bot settings on the Developer Portal!</p>
+<div id="66bb1704" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> User(DiscordObject):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"User(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">, username=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>username<span class="sc">!r}</span><span class="ss">)"</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Member(DiscordObject):</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> <span class="va">self</span>.nick <span class="kw">or</span> <span class="va">self</span>.user[<span class="st">'username'</span>]</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"Member(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>user[<span class="st">'id'</span>]<span class="sc">}</span><span class="ss">, name=</span><span class="sc">{</span>name<span class="sc">!r}</span><span class="ss">, joined=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>joined_at[:<span class="dv">10</span>]<span class="sc">}</span><span class="ss">)"</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Members(<span class="bu">list</span>):</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>): <span class="cf">return</span> html_table(<span class="va">self</span>, (<span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"Joined"</span>, <span class="st">"Roles"</span>), <span class="kw">lambda</span> m: (m.user[<span class="st">'id'</span>], m.nick <span class="kw">or</span> m.user[<span class="st">'username'</span>], m.joined_at[:<span class="dv">10</span>], <span class="bu">len</span>(m.roles)))</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> members(<span class="va">self</span>:Guild, limit<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/members'</span>, limit<span class="op">=</span>limit)</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Member'</span>, data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="205675b9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>mems <span class="op">=</span> <span class="cf">await</span> gld.members(<span class="dv">5</span>)<span class="op">;</span> mems</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<table class="prose caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Joined</th>
+<th data-quarto-table-cell-role="th">Roles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>346450717025894400</td>
+<td>nathan</td>
+<td>2025-01-09</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1327047896436178954</td>
+<td>SearchBuddy</td>
+<td>2025-01-09</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>1361823507679543306</td>
+<td>DBuddy</td>
+<td>2025-04-15</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>1448038710229733398</td>
+<td>Dizcord Util Bot</td>
+<td>2025-12-09</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>1467222191182712986</td>
+<td>Search Agent</td>
+<td>2026-01-31</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="1a8f4ba5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lbl(ch):</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> <span class="st">"#"</span> <span class="cf">if</span> ch.<span class="bu">type</span><span class="op">==</span><span class="dv">0</span> <span class="cf">else</span> <span class="st">"🔊"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    l <span class="op">+=</span> ch.name</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t <span class="op">:=</span> <span class="bu">getattr</span>(ch, <span class="st">'topic'</span>, <span class="st">''</span>): l <span class="op">+=</span> <span class="st">': '</span> <span class="op">+</span> t</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> l</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> tree(<span class="va">self</span>:Guild, include_members<span class="op">=</span><span class="va">True</span>, member_limit<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    by_parent,cats <span class="op">=</span> defaultdict(<span class="bu">list</span>),[<span class="va">None</span>]</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="cf">await</span> <span class="va">self</span>.channels():</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c.<span class="bu">type</span> <span class="op">==</span> <span class="dv">4</span>: cats.append(c)</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> c.<span class="bu">type</span> <span class="kw">in</span> (<span class="dv">0</span>,<span class="dv">2</span>): by_parent[c.parent_id].append(c)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">}</span><span class="ss"> [</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">]"</span>]</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> cat <span class="kw">in</span> cats:</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>        lines.append(<span class="ss">f"|-- </span><span class="sc">{</span><span class="bu">getattr</span>(cat, <span class="st">'name'</span>, <span class="st">'Uncategorized'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> ch <span class="kw">in</span> by_parent[<span class="bu">getattr</span>(cat, <span class="st">'id'</span>, <span class="va">None</span>)]:</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>            lines.append(<span class="ss">f"|   |-- </span><span class="sc">{</span>lbl(ch)<span class="sc">}</span><span class="ss"> [</span><span class="sc">{</span>ch<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">]"</span>)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> include_members:</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>        lines.append(<span class="st">"|-- Members"</span>)</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> m <span class="kw">in</span> <span class="cf">await</span> <span class="va">self</span>.members(member_limit):</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>            u <span class="op">=</span> m.user</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>            name <span class="op">=</span> m.nick <span class="kw">or</span> u.get(<span class="st">'global_name'</span>) <span class="kw">or</span> u[<span class="st">'username'</span>]</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>            lines.append(<span class="ss">f"|   |-- </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> [</span><span class="sc">{</span>u[<span class="st">'id'</span>]<span class="sc">}</span><span class="ss">]"</span>)</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(lines)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="c8bf3578" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="cf">await</span> gld.tree())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>natedog's server [1327046393453613076]
+|-- Uncategorized
+|   |-- #test [1506656999293849753]
+|   |-- 🔊test-vch [1506657701688508456]
+|-- Text Channels
+|   |-- #general: General conversations [1327046393453613079]
+|   |-- #private [1327954661960978512]
+|   |-- #forwarded [1475600987627458812]
+|   |-- #test-webhooks [1501265913222266961]
+|-- Voice Channels
+|   |-- 🔊General [1327046393453613080]
+|-- Members
+|   |-- nathan [346450717025894400]
+|   |-- SearchBuddy [1327047896436178954]
+|   |-- DBuddy [1361823507679543306]
+|   |-- Dizcord Util Bot [1448038710229733398]
+|   |-- Search Agent [1467222191182712986]</code></pre>
+</div>
+</div>
+<div id="4687437a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_all(<span class="va">self</span>:Guild, limit<span class="op">=</span><span class="dv">500</span>, delay<span class="op">=</span><span class="fl">1.0</span>, max_age_days<span class="op">=</span><span class="va">None</span>, show<span class="op">=</span><span class="va">False</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Paginated search returning up to `limit` messages"</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    all_msgs, offset <span class="op">=</span> [], <span class="dv">0</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">len</span>(all_msgs) <span class="op">&lt;</span> limit:</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>        msgs <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>.search(offset<span class="op">=</span>offset, limit<span class="op">=</span><span class="dv">25</span>, <span class="op">**</span>kwargs)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> msgs: <span class="cf">break</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> max_age_days <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>            cutoff <span class="op">=</span> datetime.now(timezone.utc) <span class="op">-</span> timedelta(days<span class="op">=</span>max_age_days)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>            msgs <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> msgs <span class="cf">if</span> datetime.fromisoformat(m.timestamp) <span class="op">&gt;</span> cutoff]</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>        all_msgs.extend(msgs)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>        offset <span class="op">+=</span> <span class="dv">25</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> show: <span class="bu">print</span>(<span class="ss">f'Fetched </span><span class="sc">{</span><span class="bu">len</span>(msgs)<span class="sc">}</span><span class="ss"> more'</span>)</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(msgs) <span class="op">&lt;</span> <span class="dv">25</span>: <span class="cf">break</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.sleep(delay)</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Messages(all_msgs[:limit])</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="at">@delegates</span>(Guild.search_all, but<span class="op">=</span>[<span class="st">'channel_id'</span>])</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_all(<span class="va">self</span>:Channel, <span class="op">**</span>kwargs):</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>    gld <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>.guild</span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> gld.search_all(channel_id<span class="op">=</span><span class="va">self</span>.<span class="bu">id</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="37f5848f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># r = await ch.search_all()</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># len(r)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="beead147" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> delete(<span class="va">self</span>:Message):</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Delete this message"</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'DELETE'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>channel_id<span class="sc">}</span><span class="ss">/messages/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> delete_message(<span class="va">self</span>:Channel, message_id):</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Delete a message by ID"</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'DELETE'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages/</span><span class="sc">{</span>message_id<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> bulk_delete(<span class="va">self</span>:Channel, message_ids):</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Bulk delete messages (must be &lt;14 days old)"</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'POST'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages/bulk-delete'</span>, messages<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> message_ids])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1834fc2f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> create_thread(<span class="va">self</span>:Message, name):</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Create a thread from this message"</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'POST'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>channel_id<span class="sc">}</span><span class="ss">/messages/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/threads'</span>, name<span class="op">=</span>name)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Channel(r, <span class="va">self</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> thread(<span class="va">self</span>:DiscordClient, thread_id):</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch a thread (which is a Channel)"</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Channel(<span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'GET'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span>thread_id<span class="sc">}</span><span class="ss">'</span>), <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="05498e5a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> _del_rotating(<span class="va">self</span>:Channel, message_ids, delay<span class="op">=</span><span class="fl">0.5</span>, show<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> show: <span class="bu">print</span>(<span class="ss">f'Deleting </span><span class="sc">{</span><span class="bu">len</span>(message_ids)<span class="sc">}</span><span class="ss"> messages...'</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,mid <span class="kw">in</span> <span class="bu">enumerate</span>(message_ids):</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        use_user <span class="op">=</span> i <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span> <span class="kw">and</span> <span class="bu">bool</span>(<span class="va">self</span>._client.user_token)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: <span class="cf">await</span> <span class="va">self</span>(<span class="st">'DELETE'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/messages/</span><span class="sc">{</span>mid<span class="sc">}</span><span class="ss">'</span>, use_user<span class="op">=</span>use_user)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> DiscordError <span class="im">as</span> e:</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> e.args[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">10008</span>: <span class="bu">print</span>(<span class="ss">f"Already deleted: </span><span class="sc">{</span>mid<span class="sc">}</span><span class="ss">"</span>)<span class="op">;</span> <span class="cf">continue</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.sleep(delay)</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> show: <span class="bu">print</span>(<span class="st">'.'</span>, end<span class="op">=</span><span class="st">''</span>, flush<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">len</span>(message_ids)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="a9c7d953" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> search_and_delete_all(<span class="va">self</span>:Channel, content, delay<span class="op">=</span><span class="dv">2</span>, show<span class="op">=</span><span class="va">False</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Bulk delete recent msgs, individually delete older ones"</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> content, <span class="st">"Must include content to search for"</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    cutoff <span class="op">=</span> datetime.now(timezone.utc) <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    gld <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>.guild</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    msgs <span class="op">=</span> <span class="cf">await</span> gld.search_all(content<span class="op">=</span>content, channel_id<span class="op">=</span><span class="va">self</span>.<span class="bu">id</span>, show<span class="op">=</span>show, <span class="op">**</span>kwargs)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    seen <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    msgs <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> msgs <span class="cf">if</span> m.<span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> seen <span class="kw">and</span> <span class="kw">not</span> seen.add(m.<span class="bu">id</span>)]</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> msgs <span class="cf">if</span> datetime.fromisoformat(m.timestamp) <span class="op">&gt;</span> cutoff]</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    old <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> msgs <span class="cf">if</span> datetime.fromisoformat(m.timestamp) <span class="op">&lt;=</span> cutoff]</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(recent), <span class="dv">20</span>):</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>        ms <span class="op">=</span> recent[i:i<span class="op">+</span><span class="dv">20</span>]</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(ms)<span class="op">&gt;</span><span class="dv">1</span>: <span class="cf">await</span> <span class="va">self</span>.bulk_delete([m.<span class="bu">id</span> <span class="cf">for</span> m <span class="kw">in</span> ms])</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="cf">await</span> <span class="va">self</span>._del_rotating([m.<span class="bu">id</span> <span class="cf">for</span> m <span class="kw">in</span> ms], show<span class="op">=</span>show)</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> show: <span class="bu">print</span>(<span class="ss">f'Bulk deleted </span><span class="sc">{</span><span class="bu">len</span>(ms)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.sleep(delay)</span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> old: <span class="cf">await</span> <span class="va">self</span>._del_rotating([m.<span class="bu">id</span> <span class="cf">for</span> m <span class="kw">in</span> old], show<span class="op">=</span>show, delay<span class="op">=</span>delay)</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">len</span>(msgs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Webhooks let external services post to a channel without a bot token—executing one only needs its <code>id</code> and <code>token</code>. We wrap them in a <a href="https://AnswerDotAI.github.io/cordslite/core.html#webhook"><code>Webhook</code></a> class, with <code>webhooks</code> listings on both <a href="https://AnswerDotAI.github.io/cordslite/core.html#channel"><code>Channel</code></a> and <a href="https://AnswerDotAI.github.io/cordslite/core.html#guild"><code>Guild</code></a>, and <code>edit</code>/<code>delete</code>/<code>send</code> on the webhook itself. <code>send</code> uses <code>?wait=true</code> so Discord returns the created message, and supports per-message <code>username</code>/<code>avatar_url</code> overrides.</p>
+<div id="913993ce" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Webhook(DiscordObject):</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>): <span class="cf">return</span> <span class="ss">f"Webhook(id=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">, name=</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">!r}</span><span class="ss">)"</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Webhooks(<span class="bu">list</span>):</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _repr_html_(<span class="va">self</span>): <span class="cf">return</span> html_table(<span class="va">self</span>, (<span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"Channel"</span>), <span class="kw">lambda</span> w: (w.<span class="bu">id</span>, w.name, w.channel_id))</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> webhooks(<span class="va">self</span>:Channel):</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"List this channel's webhooks"</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Webhook'</span>, <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/webhooks'</span>))</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> webhooks(<span class="va">self</span>:Guild):</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"List all webhooks in this guild"</span></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.coll(<span class="st">'Webhook'</span>, <span class="cf">await</span> <span class="va">self</span>(<span class="st">'GET'</span>, <span class="ss">f'/guilds/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/webhooks'</span>))</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> webhook(<span class="va">self</span>:DiscordClient, webhook_id):</span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Fetch a webhook by ID"</span></span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Webhook(<span class="cf">await</span> <span class="va">self</span>._req(<span class="st">'GET'</span>, <span class="ss">f'/webhooks/</span><span class="sc">{</span>webhook_id<span class="sc">}</span><span class="ss">'</span>), <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="54e21572" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> create_webhook(<span class="va">self</span>:Channel, name):</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Add webhook `name` to Channel"</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'POST'</span>, <span class="ss">f'/channels/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/webhooks'</span>, name<span class="op">=</span>name)</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Webhook(r, <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d346b1f4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;nbdev&quot;,&quot;value&quot;:{&quot;export&quot;:&quot;true&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> edit(<span class="va">self</span>:Webhook, name<span class="op">=</span><span class="va">None</span>, channel_id<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Modify this webhook's `name` or move it to `channel_id`"</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Webhook(<span class="cf">await</span> <span class="va">self</span>(<span class="st">'PATCH'</span>, <span class="ss">f'/webhooks/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span>, name<span class="op">=</span>name, channel_id<span class="op">=</span>channel_id), <span class="va">self</span>._parent)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> delete(<span class="va">self</span>:Webhook):</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Delete this webhook"</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'DELETE'</span>, <span class="ss">f'/webhooks/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="at">@patch</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> send(<span class="va">self</span>:Webhook, content<span class="op">=</span><span class="st">''</span>, username<span class="op">=</span><span class="va">None</span>, avatar_url<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Execute this webhook, optionally overriding the display `username`/`avatar_url`"</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="cf">await</span> <span class="va">self</span>(<span class="st">'POST'</span>, <span class="ss">f'/webhooks/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>token<span class="sc">}</span><span class="ss">?wait=true'</span>, content<span class="op">=</span>content, username<span class="op">=</span>username, avatar_url<span class="op">=</span>avatar_url)</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Message(r, <span class="va">self</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/AnswerDotAI\.github\.io\/cordslite");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/AnswerDotAI/cordslite/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
