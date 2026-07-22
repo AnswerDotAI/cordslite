@@ -49,7 +49,7 @@ class VoiceClient:
         self.gc.on("VOICE_SERVER_UPDATE", self.on_server_update)
     
     async def on_state_update(self, data):
-        if data["user_id"] != self.gc.user_id: return
+        if data.get("guild_id") != self.gid or data["user_id"] != self.gc.user_id: return
         self.session_id = data["session_id"]
         ch = data.get("channel_id")
         if ch is None:
@@ -346,6 +346,7 @@ async def join(self:VoiceClient, debug=False):
 async def disconnect(self:VoiceClient):
     "Tear down voice ws/UDP without notifying the main gateway (used when Discord already removed us)"
     self.running = False
+    if getattr(self, '_recording', False): await self.stop_recording(mix=False)
     for t in (self._hb_task, self._ka_task, self._listen_task):
         if t: t.cancel()
     if self.ws: await self.ws.close()
@@ -407,8 +408,9 @@ async def _get_proc(self:VoiceClient, uid):
         path = str(self._rec_path.with_stem(f'{self._rec_path.stem}_{uid}'))
         p = ( ffmpeg.input('pipe:', f='s16le', ar=sr, ac=n_chs)
                     .output(path)
+                    .global_args('-nostats', '-loglevel', 'error')
                     .overwrite_output()
-                    .run_async(pipe_stdin=True, quiet=True))
+                    .run_async(pipe_stdin=True))
         self._rec_procs[uid] = (p, path)
         self._rec_offsets[uid] = max(time.time() - self._rec_start, 0)
     return self._rec_procs[uid]
@@ -462,7 +464,7 @@ async def mix_recording(self:VoiceClient, mix_path=None, timeout=None, **out_kw)
     else:
         inputs = [_delayed_input(path, self._rec_offsets.get(uid, 0)) for uid,path in speaker_paths.items()]
         out = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
-    await _wait_proc(out.output(mixed_path, **out_kw).overwrite_output().run_async(quiet=True), timeout)
+    await _wait_proc(out.output(mixed_path, **out_kw).global_args('-nostats', '-loglevel', 'error').overwrite_output().run_async(), timeout)
     return mixed_path
 
 @patch
