@@ -35,7 +35,7 @@ class DiscordError(Exception):
 
 @patch
 async def _req(self:DiscordClient, method, path, data=None, files=None, use_user=False, **kw):
-    kw = filter_values(kw, negate(is_(None)))
+    kw = filter_values(kw, negate(is_(UNSET)))
     headers = None
     if use_user:
         if not self.user_token: raise ValueError("User token required for this operation")
@@ -106,7 +106,7 @@ class Guilds(list):
     def _repr_html_(self): return html_table(self, ("ID", "Name"), lambda g: (g.id, g.name))
 
 @patch
-async def guilds(self:DiscordClient, limit=None):
+async def guilds(self:DiscordClient, limit=UNSET):
     "List the guilds the bot is a member of"
     data = await self._req('GET', '/users/@me/guilds', limit=limit)
     return Guilds(Guild(d, self) for d in data)
@@ -136,9 +136,9 @@ class Messages(list):
             lambda m: (m.id, m.author['username'], m.content[:50], m.timestamp[:10]))
 
 @patch
-async def messages(self:Channel, limit=50, before=None, after=None, around=None):
+async def messages(self:Channel, limit=50, before=UNSET, after=UNSET, around=UNSET):
     "Fetch channel messages. `before`, `after`, and `around` are mutually exclusive message IDs."
-    if sum(x is not None for x in [before, after, around]) > 1:
+    if sum(x is not UNSET for x in [before, after, around]) > 1:
         raise ValueError("Pass only one of `before`, `after`, or `around`")
 
     def mid(x): return x.id if isinstance(x, Message) else x
@@ -185,9 +185,9 @@ def date2snowflake(date_str):
     return str(int((dt.timestamp() * 1000 - depoch) * (2**22)))
 
 @patch
-async def search(self:Guild, content=None, author_id=None, channel_id=None, mentions=None,
-                 has=None, before=None, after=None, pinned=None, sort_by=None, sort_order=None,
-                   offset=None, limit=None, use_user=False, nothread:bool=True):
+async def search(self:Guild, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET,
+                 has=UNSET, before=UNSET, after=UNSET, pinned=UNSET, sort_by=UNSET, sort_order=UNSET,
+                   offset=UNSET, limit=UNSET, use_user=False, nothread:bool=True):
     "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
     if before and not str(before).isdigit(): before = date2snowflake(before)
     if after and not str(after).isdigit(): after = date2snowflake(after)
@@ -404,7 +404,7 @@ async def create_webhook(self:Channel, name):
 
 # %% ../nbs/00_core.ipynb #d346b1f4
 @patch
-async def edit(self:Webhook, name=None, channel_id=None):
+async def edit(self:Webhook, name=UNSET, channel_id=UNSET):
     "Modify this webhook's `name` or move it to `channel_id`"
     return Webhook(await self('PATCH', f'/webhooks/{self.id}', name=name, channel_id=channel_id), self._parent)
 
@@ -414,7 +414,7 @@ async def delete(self:Webhook):
     return await self('DELETE', f'/webhooks/{self.id}')
 
 @patch
-async def send(self:Webhook, content='', username=None, avatar_url=None):
+async def send(self:Webhook, content='', username=UNSET, avatar_url=UNSET):
     "Execute this webhook, optionally overriding the display `username`/`avatar_url`"
     r = await self('POST', f'/webhooks/{self.id}/{self.token}?wait=true', content=content, username=username, avatar_url=avatar_url)
     return Message(r, self)
