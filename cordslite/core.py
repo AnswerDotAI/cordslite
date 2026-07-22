@@ -115,10 +115,10 @@ async def guilds(self:DiscordClient, limit=None):
 class Message(DiscordObject):
     def __init__(self, data, dobj):
         super().__init__(data, dobj)
-        self.raw_content = self.content
+        self.raw_content = self.get('content', '')
         mentions = {m['id']: m['username'] for m in data.get('mentions', [])}
         def repl(m): return f"@{mentions.get(m.group(1), 'unknown')}"
-        self['content'] = re.sub(r'<@!?(\d+)>', repl, self.content)
+        self['content'] = re.sub(r'<@!?(\d+)>', repl, self.raw_content)
 
     def __repr__(self): 
         author = self.author['username']
