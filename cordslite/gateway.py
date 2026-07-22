@@ -71,9 +71,9 @@ async def send(self:websockets.asyncio.client.ClientConnection, msg, **kw):
 # %% ../nbs/01_gateway.ipynb #32dcd695
 @patch
 async def recv_evt(self:GatewayClient):
-    evt = Event(json.loads(await self.ws.recv()), self.dc)
-    if evt.op == 0 and evt.seq: self.seq,self._tries = evt.seq,0
-    return evt
+    data = json.loads(await self.ws.recv())
+    if data.get('op') == 0 and data.get('s'): self.seq,self._tries = data['s'],0
+    return Event(data, self.dc)
 
 # %% ../nbs/01_gateway.ipynb #34218c7b
 @patch
@@ -132,7 +132,6 @@ async def _listen(self:GatewayClient):
             continue
         except Exception as e:
             print('gateway listen error:', repr(e))
-            await self._reconnect(resume=True)
             continue
 
 # %% ../nbs/01_gateway.ipynb #90eff6e7
