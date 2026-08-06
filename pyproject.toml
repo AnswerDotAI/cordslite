@@ -26,6 +26,9 @@ dependencies = [
     "websockets",
 ]
 
+[project.optional-dependencies]
+dev = ['numpy']
+
 [project.urls]
 Repository = "https://github.com/AnswerDotAI/cordslite"
 Documentation = "https://AnswerDotAI.github.io/cordslite/"
