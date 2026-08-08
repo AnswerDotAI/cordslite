@@ -189,7 +189,6 @@ async def _handle_trans(self:VoiceClient, op, d):
     elif op == 13:  # CLIENT_DISCONNECT: a user left, drop their decode state
         uid = int(d["user_id"])
         self.decoders.pop(uid, None)
-        self.last_ts = {k:v for k,v in getattr(self, 'last_ts', {}).items() if self.ssrc_to_user.get(k) != uid}
         self.last_seq = {k:v for k,v in getattr(self, 'last_seq', {}).items() if self.ssrc_to_user.get(k) != uid}
         self.ssrc_to_user = {k:v for k,v in self.ssrc_to_user.items() if v != uid}
     elif op == 24:  # DAVE_PREPARE_EPOCH
@@ -242,7 +241,7 @@ async def _open_ws(self:VoiceClient):
 
 @patch
 def reset_audio(self:VoiceClient):
-    self.decoders,self.last_seq,self.last_ts,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{},{}
+    self.decoders,self.last_seq,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
 
 @patch
 async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
@@ -384,9 +383,7 @@ def decode(self:VoiceClient, pkt):
     if uid is None or uid == int(self.gc.user_id): return
 
     seq = int.from_bytes(pkt[2:4], 'big')
-    ts = int.from_bytes(pkt[4:8], 'big')
     self.last_seq = getattr(self, 'last_seq', {})
-    self.last_ts = getattr(self, 'last_ts', {})
     prev_seq = self.last_seq.get(ssrc)
     delta = (seq - prev_seq) & 0xffff if prev_seq is not None else 1
     if delta == 0 or delta >= 0x8000: return # duplicate or late
@@ -398,10 +395,13 @@ def decode(self:VoiceClient, pkt):
     missing = delta - 1
     fill = [dec.decode(b'', spf) for _ in range(missing)] if missing <= 3 else [silence(missing * spf)]
     pcm = b''.join(fill) + dec.decode(opus, 5760)
-    self.last_seq[ssrc],self.last_ts[ssrc] = seq,ts
+    self.last_seq[ssrc] = seq
     return pcm
 
 # %% ../nbs/02_voice.ipynb #4fbe2a36
+def _write_silence(fh, n_smpls, chunk=sr * 30):
+    for i in range(0, n_smpls, chunk): fh.write(silence(min(chunk, n_smpls - i)))
+
 @patch
 async def _get_proc(self:VoiceClient, uid):
     if uid not in self._rec_procs:
@@ -412,7 +412,7 @@ async def _get_proc(self:VoiceClient, uid):
                     .overwrite_output()
                     .run_async(pipe_stdin=True))
         self._rec_procs[uid] = (p, path)
-        self._rec_offsets[uid] = max(time.time() - self._rec_start, 0)
+        self._written[uid] = 0
     return self._rec_procs[uid]
 
 @patch
@@ -425,7 +425,13 @@ async def _recv_audio(self:VoiceClient):
         ssrc = int.from_bytes(pkt[8:12], 'big')
         uid = self.ssrc_to_user.get(ssrc, ssrc)
         p, path = await self._get_proc(uid)
+        pos = int((time.time() - self._rec_start) * sr)
+        behind = pos - self._written[uid]
+        if behind > sr // 5:
+            await asyncio.to_thread(_write_silence, p.stdin, behind)
+            self._written[uid] += behind
         await asyncio.to_thread(p.stdin.write, pcm)
+        self._written[uid] += len(pcm) // (n_chs * 2)
 
 # %% ../nbs/02_voice.ipynb #6b81a166
 @patch
@@ -433,20 +439,14 @@ def start_recording(self:VoiceClient, path='/tmp/recording.mp3'):
     while not self.proto.packets.empty(): self.proto.packets.get_nowait()
 
     self.decoders = {}
-    self.last_seq,self.last_ts = {},{}
+    self.last_seq = {}
     self._rec_path = Path(path)
     self._rec_procs = {}
-    self._rec_offsets = {}
+    self._written = {}
     self._rec_start = time.time()
     self._recording = True
     self._rec_task = asyncio.create_task(self._recv_audio())
     return path
-
-def _delayed_input(path, delay):
-    inp = ffmpeg.input(path)
-    if delay <= 0: return inp
-    delay = max(round(delay * 1_000), 0)
-    return inp.filter('adelay', '|'.join([str(delay)] * n_chs))
 
 async def _wait_proc(p, timeout=None):
     try: return await asyncio.wait_for(asyncio.to_thread(p.wait), timeout)
@@ -456,14 +456,14 @@ async def _wait_proc(p, timeout=None):
 
 @patch
 async def mix_recording(self:VoiceClient, mix_path=None, timeout=None, **out_kw):
-    "Mix the finalized per-speaker files into one recording at `mix_path`, offsetting late joiners; `out_kw` passes ffmpeg output options"
+    "Mix the per-speaker files (all session-length, so already aligned) into one recording at `mix_path`; `out_kw` passes ffmpeg output options"
     speaker_paths = {uid: path for uid,(p,path) in self._rec_procs.items()}
     if not speaker_paths: return None
     mixed_path = str(mix_path or self._rec_path.with_stem(f'{self._rec_path.stem}_mixed'))
     if len(speaker_paths) == 1: out = ffmpeg.input(next(iter(speaker_paths.values())))
     else:
-        inputs = [_delayed_input(path, self._rec_offsets.get(uid, 0)) for uid,path in speaker_paths.items()]
-        out = ffmpeg.filter(inputs, 'amix', inputs=len(inputs), duration='longest')
+        inputs = [ffmpeg.input(path) for path in speaker_paths.values()]
+        out = ffmpeg.filter(inputs, 'amix', inputs=len(inputs))
     await _wait_proc(out.output(mixed_path, **out_kw).global_args('-nostats', '-loglevel', 'error').overwrite_output().run_async(), timeout)
     return mixed_path
 
@@ -476,8 +476,10 @@ async def stop_recording(self:VoiceClient, mix=True, mix_path=None, timeout=10):
         try: await self._rec_task
         except asyncio.CancelledError: pass
 
+    end = int((time.time() - self._rec_start) * sr)
     speaker_paths = {}
     for uid, (p, path) in self._rec_procs.items():
+        with suppress(BrokenPipeError, OSError, ValueError): await asyncio.to_thread(_write_silence, p.stdin, end - self._written[uid])
         with suppress(BrokenPipeError, OSError, ValueError): p.stdin.close()
         await _wait_proc(p, timeout)
         speaker_paths[uid] = path
