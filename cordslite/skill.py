@@ -1,4 +1,4 @@
-"""Load this skill when an agent needs to search, summarize, or find information in Discord using cordslite. It covers read-only workflows for connecting to Discord, opening a guild, orienting through channels, searching messages, reading threads, and fetching attachments.
+"""Read-only access to Discord through cordslite. Covers connecting, opening a guild, finding your way around its channels, searching messages, reading threads, and fetching attachments.
 
 Connections to Discord use `DiscordClient`: `dc = DiscordClient(token=None, user_token=None)`. If `token` is `None`, cordslite reads the bot token from the `DISCORD_BOT_TOKEN` environment variable. `user_token` can be supplied for cordslite operations that support `use_user=True`, or defaults to the `DISCORD_USER_TOKEN` environment variable when present. Once connected, open a guild with `gld = await dc.guild(guild_id)`, where `guild_id` is provided by the user. If the guild ID is unknown, `glds = await dc.guilds()` lists the guilds the bot is a member of.
 
