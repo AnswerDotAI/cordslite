@@ -11,14 +11,14 @@ __all__ = ['evt_typs', 'GatewayClient', 'Op', 'Event']
 from .core import *
 from fastcore.utils import *
 
-import asyncio,httpx,json,os,random
+import asyncio,httpx,json,random
 import websockets, websockets.asyncio.client
 
 # %% ../nbs/01_gateway.ipynb #f87f7e5d
 class GatewayClient:
     def __init__(self, intents, client, token=None):
         self.intents,self.dc = intents,client
-        self.token = token or os.environ['DISCORD_BOT_TOKEN']
+        self.token = token or client.token
         self.ws = self.hb_int = self.session_id = self.seq = None
         self.running = False
         self._tries = 0
