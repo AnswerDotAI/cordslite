@@ -96,11 +96,6 @@ async def channels(self:Guild, limit=None):
     if limit: data = data[:limit]
     return self.coll('Channel', data)
 
-# %% ../nbs/00_core.ipynb #eded7bca
-@patch
-async def channel(self:DiscordClient, channel_id):
-    return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
-
 # %% ../nbs/00_core.ipynb #b28c1392
 class Guilds(list):
     def _repr_html_(self): return html_table(self, ("ID", "Name"), lambda g: (g.id, g.name))
@@ -110,6 +105,11 @@ async def guilds(self:DiscordClient, limit=UNSET):
     "List the guilds the bot is a member of"
     data = await self._req('GET', '/users/@me/guilds', limit=limit)
     return Guilds(Guild(d, self) for d in data)
+
+# %% ../nbs/00_core.ipynb #08935479
+@patch
+async def channel(self:DiscordClient, channel_id):
+    return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
 
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
