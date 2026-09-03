@@ -71,8 +71,7 @@ class Guild(DiscordObject):
 
 # %% ../nbs/00_core.ipynb #0aa23bb9
 @patch
-async def guild(self:DiscordClient, guild_id):
-    return Guild(await self._req('GET', f'/guilds/{guild_id}'), self)
+async def guild(self:DiscordClient, guild_id): return Guild(await self._req('GET', f'/guilds/{guild_id}'), self)
 
 # %% ../nbs/00_core.ipynb #523e4a31
 def html_table(items, hdrs, fn):
@@ -96,11 +95,6 @@ async def channels(self:Guild, limit=None):
     if limit: data = data[:limit]
     return self.coll('Channel', data)
 
-# %% ../nbs/00_core.ipynb #eded7bca
-@patch
-async def channel(self:DiscordClient, channel_id):
-    return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
-
 # %% ../nbs/00_core.ipynb #b28c1392
 class Guilds(list):
     def _repr_html_(self): return html_table(self, ("ID", "Name"), lambda g: (g.id, g.name))
@@ -110,6 +104,10 @@ async def guilds(self:DiscordClient, limit=UNSET):
     "List the guilds the bot is a member of"
     data = await self._req('GET', '/users/@me/guilds', limit=limit)
     return Guilds(Guild(d, self) for d in data)
+
+# %% ../nbs/00_core.ipynb #08935479
+@patch
+async def channel(self:DiscordClient, channel_id): return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
 
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
@@ -138,12 +136,10 @@ class Messages(list):
 @patch
 async def messages(self:Channel, limit=50, before=UNSET, after=UNSET, around=UNSET):
     "Fetch channel messages. `before`, `after`, and `around` are mutually exclusive message IDs."
-    if sum(x is not UNSET for x in [before, after, around]) > 1:
-        raise ValueError("Pass only one of `before`, `after`, or `around`")
+    if sum(x is not UNSET for x in [before, after, around]) > 1: raise ValueError("Pass only one of `before`, `after`, or `around`")
 
     def mid(x): return x.id if isinstance(x, Message) else x
-    data = await self('GET', f'/channels/{self.id}/messages',
-                      limit=limit, before=mid(before), after=mid(after), around=mid(around))
+    data = await self('GET', f'/channels/{self.id}/messages', limit=limit, before=mid(before), after=mid(after), around=mid(around))
     return self.coll('Message', reversed(data))
 
 # %% ../nbs/00_core.ipynb #a0695db1
@@ -185,18 +181,14 @@ def date2snowflake(date_str):
     return str(int((dt.timestamp() * 1000 - depoch) * (2**22)))
 
 @patch
-async def search(self:Guild, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET,
-                 has=UNSET, before=UNSET, after=UNSET, pinned=UNSET, sort_by=UNSET, sort_order=UNSET,
-                   offset=UNSET, limit=UNSET, use_user=False, nothread:bool=True):
+async def search(self:Guild, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET, has=UNSET, before=UNSET, after=UNSET,
+    pinned=UNSET, sort_by=UNSET, sort_order=UNSET, offset=UNSET, limit=UNSET, use_user=False, nothread:bool=True):
     "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
     if before and not str(before).isdigit(): before = date2snowflake(before)
     if after and not str(after).isdigit(): after = date2snowflake(after)
-    r = await self('GET', f'/guilds/{self.id}/messages/search', use_user=use_user,
-        content=content, author_id=author_id, channel_id=channel_id,
-        mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned,
-        sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit)
-    msgs = [m for m in [m[0] for m in r['messages']]
-        if not (nothread and channel_id and m['channel_id'] != channel_id)]
+    r = await self('GET', f'/guilds/{self.id}/messages/search', use_user=use_user, content=content, author_id=author_id, channel_id=channel_id,
+        mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned, sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit)
+    msgs = [m[0] for m in r['messages'] if not (nothread and channel_id and m[0]['channel_id'] != channel_id)]
     return self.coll('Message', msgs)
 
 # %% ../nbs/00_core.ipynb #44642992
@@ -274,8 +266,7 @@ async def tree(self:Guild, include_members=True, member_limit=1000):
     lines = [f"{self.name} [{self.id}]"]
     for cat in cats:
         lines.append(f"|-- {getattr(cat, 'name', 'Uncategorized')}")
-        for ch in by_parent[getattr(cat, 'id', None)]:
-            lines.append(f"|   |-- {lbl(ch)} [{ch.id}]")
+        for ch in by_parent[getattr(cat, 'id', None)]: lines.append(f"|   |-- {lbl(ch)} [{ch.id}]")
 
     if include_members:
         lines.append("|-- Members")
@@ -346,7 +337,9 @@ async def _del_rotating(self:Channel, message_ids, delay=0.5, show=False):
         use_user = i % 2 == 1 and bool(self._client.user_token)
         try: await self('DELETE', f'/channels/{self.id}/messages/{mid}', use_user=use_user)
         except DiscordError as e:
-            if e.args[0] == 10008: print(f"Already deleted: {mid}"); continue
+            if e.args[0] == 10008:
+                print(f"Already deleted: {mid}")
+                continue
             raise
         await asyncio.sleep(delay)
         if show: print('.', end='', flush=True)

@@ -17,7 +17,7 @@ from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt as xchacha_
 from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_encrypt as xchacha_encrypt
 from nacl.exceptions import CryptoError
 
-import asyncio,davey,ffmpeg,json,os,random,struct,time
+import asyncio,davey,ffmpeg,json,random,struct,time
 import websockets
 try: import opuslib_next
 except: print("Failed to import opuslib-next")
@@ -68,8 +68,7 @@ class VoiceClient:
         self.token,self.endpoint = tok,ep
         if not ep: return self.server_ready.clear() # server went away; a follow-up update names the new one
         self.server_ready.set()
-        if moved and getattr(self, 'running', False):
-            asyncio.create_task(self._reconnect(resume=False, rejoin=False))
+        if moved and getattr(self, 'running', False): asyncio.create_task(self._reconnect(resume=False, rejoin=False))
 
     def __repr__(self): return f'VoiceClient({self.ch=})'
 
@@ -79,18 +78,15 @@ def voice_state(cls:Op, guild_id, channel_id):
     return cls(op=4, d=AttrDict(guild_id=guild_id, channel_id=channel_id, self_mute=False, self_deaf=False))
 @patch(cls_method=True)
 def voice_identify(cls:Op, server_id, user_id, session_id, token):
-    return cls(op=0, d=AttrDict(server_id=server_id, user_id=user_id,
-                                session_id=session_id, token=token,
-                                max_dave_protocol_version=davey.DAVE_PROTOCOL_VERSION))
+    return cls(op=0, d=AttrDict(server_id=server_id, user_id=user_id, session_id=session_id, token=token,
+        max_dave_protocol_version=davey.DAVE_PROTOCOL_VERSION))
 @patch(cls_method=True)
 def select_protocol(cls:Op, ip, port, mode='aead_xchacha20_poly1305_rtpsize'):
     return cls(op=1, d=AttrDict(protocol='udp', data=dict(address=ip, port=port, mode=mode)))
 @patch(cls_method=True)
-def speaking(cls:Op, ssrc, speaking=0):
-    return cls(op=5, d=AttrDict(speaking=speaking, delay=0, ssrc=ssrc))
+def speaking(cls:Op, ssrc, speaking=0): return cls(op=5, d=AttrDict(speaking=speaking, delay=0, ssrc=ssrc))
 @patch(cls_method=True)
-def voice_heartbeat(cls:Op, seq_ack=-1):
-    return cls(op=3, d=AttrDict(t=int(time.time() * 1000), seq_ack=seq_ack))
+def voice_heartbeat(cls:Op, seq_ack=-1): return cls(op=3, d=AttrDict(t=int(time.time() * 1000), seq_ack=seq_ack))
 @patch(cls_method=True)
 def voice_resume(cls:Op, server_id, session_id, token, seq_ack=-1):
     return cls(op=7, d=AttrDict(server_id=server_id, session_id=session_id, token=token, seq_ack=seq_ack))
@@ -100,8 +96,7 @@ async def _join(self:VoiceClient, timeout=10):
     self.state_ready.clear()
     self.server_ready.clear()
     await self.gc.ws.send(Op.voice_state(self.gid, self.ch.id))
-    await asyncio.wait_for( asyncio.gather(self.state_ready.wait(), self.server_ready.wait()),
-                            timeout)
+    await asyncio.wait_for(asyncio.gather(self.state_ready.wait(), self.server_ready.wait()), timeout)
 
 # %% ../nbs/02_voice.ipynb #25477367
 async def _ip(trans, proto, ssrc):
@@ -181,8 +176,7 @@ async def _handle_trans(self:VoiceClient, op, d):
         self.dave_pending_transitions[tid] = d["protocol_version"]
         if tid == 0: self.execute_transition(tid)
         else:
-            if d["protocol_version"] == 0 and self.dave:
-                self.dave.set_passthrough_mode(True, 120)
+            if d["protocol_version"] == 0 and self.dave: self.dave.set_passthrough_mode(True, 120)
             await self.ws.send({"op": 23, "d": {"transition_id": tid}})
     elif op == 22:  # DAVE_EXECUTE_TRANSITION
         self.execute_transition(d["transition_id"])
@@ -205,10 +199,8 @@ async def _handle_mls(self:VoiceClient, msg):
     if op == 25: self.dave.set_external_sender(data)
     elif op == 27:
         typ = data[0]
-        res = self.dave.process_proposals(davey.ProposalsOperationType.append if typ == 0
-                                                  else davey.ProposalsOperationType.revoke, data[1:])
-        if isinstance(res, davey.CommitWelcome):
-            await self.ws.send(bytes([28]) + res.commit + (res.welcome or b""))
+        res = self.dave.process_proposals(davey.ProposalsOperationType.append if typ == 0 else davey.ProposalsOperationType.revoke, data[1:])
+        if isinstance(res, davey.CommitWelcome): await self.ws.send(bytes([28]) + res.commit + (res.welcome or b""))
     elif op == 29:
         tid = int.from_bytes(data[:2], "big")
         self.dave.process_commit(data[2:])
@@ -240,8 +232,7 @@ async def _open_ws(self:VoiceClient):
     self._listen_task = asyncio.create_task(self._listen())
 
 @patch
-def reset_audio(self:VoiceClient):
-    self.decoders,self.last_seq,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
+def reset_audio(self:VoiceClient): self.decoders,self.last_seq,self.ssrc_to_user,self.dave_pending_transitions = {},{},{},{}
 
 @patch
 async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
@@ -258,12 +249,14 @@ async def _reconnect(self:VoiceClient, resume=True, rejoin=None):
         if getattr(self, 'trans', None): self.trans.close()
         self.reset_audio()
         self.v_seq = -1
-        self.sess.clear(); self.rdy.clear()
+        self.sess.clear()
+        self.rdy.clear()
     if rejoin:
         self._rejoining = True
         while self.running: # the main gateway may itself be mid-reconnect; keep trying until it can carry us
             try:
-                self.state_ready.clear(); self.server_ready.clear()
+                self.state_ready.clear()
+                self.server_ready.clear()
                 await self.gc.ws.send(Op.voice_state(self.gid, None))
                 await asyncio.sleep(0.5)
                 await self._join()
@@ -323,8 +316,7 @@ async def _listen(self:VoiceClient):
             if e.code == 4014: break # kicked/moved or server swap: only gateway events can revive us
             asyncio.create_task(self._reconnect(resume=e.code not in (4003, 4004, 4005, 4006, 4009, 4011)))
             break
-        except Exception as e:
-            print('voice listen error:', repr(e))
+        except Exception as e: print('voice listen error:', repr(e))
 
 @patch
 async def join(self:VoiceClient, debug=False):
@@ -406,11 +398,8 @@ def _write_silence(fh, n_smpls, chunk=sr * 30):
 async def _get_proc(self:VoiceClient, uid):
     if uid not in self._rec_procs:
         path = str(self._rec_path.with_stem(f'{self._rec_path.stem}_{uid}'))
-        p = ( ffmpeg.input('pipe:', f='s16le', ar=sr, ac=n_chs)
-                    .output(path)
-                    .global_args('-nostats', '-loglevel', 'error')
-                    .overwrite_output()
-                    .run_async(pipe_stdin=True))
+        p = (ffmpeg.input('pipe:', f='s16le', ar=sr, ac=n_chs).output(path)
+            .global_args('-nostats', '-loglevel', 'error').overwrite_output().run_async(pipe_stdin=True))
         self._rec_procs[uid] = (p, path)
         self._written[uid] = 0
     return self._rec_procs[uid]
@@ -510,8 +499,7 @@ def send_pkt(self:VoiceClient, payload):
 opus_silence = b'\xf8\xff\xfe'
 
 @patch
-async def speaking(self:VoiceClient, on=True):
-    await self.ws.send(Op.speaking(self.ssrc, int(on)))
+async def speaking(self:VoiceClient, on=True): await self.ws.send(Op.speaking(self.ssrc, int(on)))
 
 @patch
 def send_frame(self:VoiceClient, fr): self.send_pkt(self.encode(fr))
@@ -548,8 +536,7 @@ def pcm2frames(pcm):
 async def send_pcm(self:VoiceClient, pcm, end=True): await self.send_frames(pcm2frames(pcm), end=end)
 
 # %% ../nbs/02_voice.ipynb #cc4396b3
-def file2pcm(path):
-    return ffmpeg.input(path).output('pipe:', f='s16le', ar=sr, ac=n_chs).run(capture_stdout=True, quiet=True)[0]
+def file2pcm(path): return ffmpeg.input(path).output('pipe:', f='s16le', ar=sr, ac=n_chs).run(capture_stdout=True, quiet=True)[0]
 
 @patch
 async def play_file(self:VoiceClient, path): await self.send_pcm(file2pcm(path))
