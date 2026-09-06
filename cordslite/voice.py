@@ -189,7 +189,7 @@ async def _handle_trans(self:VoiceClient, op, d):
         if d["epoch"] == 1:
             self.dave_version = d["protocol_version"]
             await self._dave()
-    else: print("voice json", op, d)
+    elif self.debug: print("voice json", op, d)
 
 @patch
 async def _handle_mls(self:VoiceClient, msg):
@@ -213,7 +213,7 @@ async def _handle_mls(self:VoiceClient, msg):
         if tid:
             self.dave_pending_transitions[tid] = self.dave_version
             await self.ws.send({"op": 23, "d": {"transition_id": tid}})
-    else: print("voice bin", self.v_seq, op, len(msg))
+    elif self.debug: print("voice bin", self.v_seq, op, len(msg))
 
 # %% ../nbs/02_voice.ipynb #96a3c508
 @patch
@@ -309,7 +309,7 @@ async def _listen(self:VoiceClient):
                 await self._wait_dave_ready()
                 self.resumed.set()
             elif op >= 13: await self._handle_trans(op, d)
-            else: print("voice json", op, d)
+            elif self.debug: print("voice json", op, d)
         except websockets.exceptions.ConnectionClosed as e:
             if not self.running: break
             print(f'voice gateway closed: {e.code} {e.reason}')
@@ -412,7 +412,8 @@ async def _recv_audio(self:VoiceClient):
         if not (pcm := self.decode(pkt)): continue
 
         ssrc = int.from_bytes(pkt[8:12], 'big')
-        uid = self.ssrc_to_user.get(ssrc, ssrc)
+        uid = self.ssrc_to_user.get(ssrc)
+        if uid is None: continue
         p, path = await self._get_proc(uid)
         pos = int((time.time() - self._rec_start) * sr)
         behind = pos - self._written[uid]

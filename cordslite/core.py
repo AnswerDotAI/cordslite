@@ -300,6 +300,10 @@ async def members(self:Guild, limit=100):
     data = await self('GET', f'/guilds/{self.id}/members', limit=limit)
     return self.coll('Member', data)
 
+# %% ../nbs/00_core.ipynb #eb734677
+@patch(as_prop=True)
+def display_name(self:Member): return self.nick or self.user.get('global_name') or self.user['username']
+
 # %% ../nbs/00_core.ipynb #9f04c635
 @patch
 async def me(self:DiscordClient):
@@ -345,9 +349,7 @@ async def tree(self:Guild, include_members=True, member_limit=1000):
     if include_members:
         lines.append("|-- Members")
         for m in await self.members(member_limit):
-            u = m.user
-            name = m.nick or u.get('global_name') or u['username']
-            lines.append(f"|   |-- {name} [{u['id']}]")
+            lines.append(f"|   |-- {m.display_name} [{m.user['id']}]")
 
     return "\n".join(lines)
 
