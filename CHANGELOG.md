@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.2.1
+
+### New Features
+
+- Add DM support: list, read, and search direct messages ([#29](https://github.com/AnswerDotAI/cordslite/pull/29)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.2.0
 
 ### New Features
