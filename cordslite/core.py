@@ -136,7 +136,7 @@ async def guilds(self:DiscordClient, limit=UNSET):
 
 # %% ../nbs/00_core.ipynb #08935479
 @patch
-async def channel(self:DiscordClient, channel_id): return Channel(await self._req('GET', f'/channels/{channel_id}'), self)
+async def channel(self:DiscordClient, channel_id, use_user=False): return Channel(await self._req('GET', f'/channels/{channel_id}', use_user=use_user), self)
 
 # %% ../nbs/00_core.ipynb #461bcb8b
 class Message(DiscordObject):
@@ -163,12 +163,12 @@ class Messages(list):
             lambda m: (m.id, m.author['username'], m.content[:50], m.timestamp[:10]))
 
 @patch
-async def messages(self:Channel, limit=50, before=UNSET, after=UNSET, around=UNSET):
+async def messages(self:Channel, limit=50, before=UNSET, after=UNSET, around=UNSET, use_user=False):
     "Fetch channel messages. `before`, `after`, and `around` are mutually exclusive message IDs."
     if sum(x is not UNSET for x in [before, after, around]) > 1: raise ValueError("Pass only one of `before`, `after`, or `around`")
 
     def mid(x): return x.id if isinstance(x, Message) else x
-    data = await self('GET', f'/channels/{self.id}/messages', limit=limit, before=mid(before), after=mid(after), around=mid(around))
+    data = await self('GET', f'/channels/{self.id}/messages', limit=limit, before=mid(before), after=mid(after), around=mid(around), use_user=use_user)
     return self.coll('Message', reversed(data))
 
 # %% ../nbs/00_core.ipynb #a0695db1
@@ -194,11 +194,11 @@ DISCORD_WEB = 'https://discord.com/channels'
 def url(self:Guild): return f'{DISCORD_WEB}/{self.id}'
 
 @patch(as_prop=True)
-def url(self:Channel): return f'{DISCORD_WEB}/{self.guild_id}/{self.id}'
+def url(self:Channel): return f'{DISCORD_WEB}/{self.get("guild_id") or "@me"}/{self.id}'
 
 @patch(as_prop=True)
 def url(self:Message):
-    gid = self.get('guild_id') or self._parent.get('guild_id') or self._parent.id
+    gid = self.get('guild_id') or self._parent.get('guild_id') or (self._parent.id if isinstance(self._parent, Guild) else '@me')
     return f'{DISCORD_WEB}/{gid}/{self.channel_id}/{self.id}'
 
 # %% ../nbs/00_core.ipynb #e589948c
@@ -209,16 +209,20 @@ def date2snowflake(date_str):
     dt = datetime.fromisoformat(date_str).replace(tzinfo=timezone.utc)
     return str(int((dt.timestamp() * 1000 - depoch) * (2**22)))
 
-@patch
-async def search(self:Guild, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET, has=UNSET, before=UNSET, after=UNSET,
+async def _search(obj, path, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET, has=UNSET, before=UNSET, after=UNSET,
     pinned=UNSET, sort_by=UNSET, sort_order=UNSET, offset=UNSET, limit=UNSET, use_user=False, nothread:bool=True):
-    "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
     if before and not str(before).isdigit(): before = date2snowflake(before)
     if after and not str(after).isdigit(): after = date2snowflake(after)
-    r = await self('GET', f'/guilds/{self.id}/messages/search', use_user=use_user, content=content, author_id=author_id, channel_id=channel_id,
+    r = await obj('GET', path, use_user=use_user, content=content, author_id=author_id, channel_id=channel_id,
         mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned, sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit)
     msgs = [m[0] for m in r['messages'] if not (nothread and channel_id and m[0]['channel_id'] != channel_id)]
-    return self.coll('Message', msgs)
+    return obj.coll('Message', msgs)
+
+@patch
+@delegates(_search)
+async def search(self:Guild, **kwargs):
+    "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
+    return await _search(self, f'/guilds/{self.id}/messages/search', **kwargs)
 
 # %% ../nbs/00_core.ipynb #44642992
 @patch
@@ -248,7 +252,11 @@ async def typing(self:Channel):
 # %% ../nbs/00_core.ipynb #9e14fc6c
 @patch
 @delegates(Guild.search, but=['channel_id'])
-async def search(self:Channel, **kwargs): return await (await self.guild).search(channel_id=self.id, **kwargs)
+async def search(self:Channel, **kwargs):
+    "Search this channel's messages; a DM is searched as the user"
+    if self.get('guild_id'): return await (await self.guild).search(channel_id=self.id, **kwargs)
+    kwargs['use_user'] = True
+    return await _search(self, f'/channels/{self.id}/messages/search', **kwargs)
 
 # %% ../nbs/00_core.ipynb #fd998c99
 class Attachment(DiscordObject):
@@ -282,6 +290,12 @@ async def save(self:Attachment,
 async def create_dm(self:DiscordClient, user_id):
     r = await self._req('POST', '/users/@me/channels', recipient_id=user_id)
     return Channel(r, self)
+
+# %% ../nbs/00_core.ipynb #5d071327
+@patch
+async def dms(self:DiscordClient):
+    "The account's open DM and group DM channels; needs a user token"
+    return Channels(Channel(d, self) for d in await self._req('GET', '/users/@me/channels', use_user=True))
 
 # %% ../nbs/00_core.ipynb #66bb1704
 class User(DiscordObject):
@@ -355,12 +369,10 @@ async def tree(self:Guild, include_members=True, member_limit=1000):
 
 
 # %% ../nbs/00_core.ipynb #4687437a
-@patch
-async def search_all(self:Guild, limit=500, delay=1.0, max_age_days=None, show=False, **kwargs):
-    "Paginated search returning up to `limit` messages"
+async def _search_all(obj, limit=500, delay=1.0, max_age_days=None, show=False, **kwargs):
     all_msgs, offset = [], 0
     while len(all_msgs) < limit:
-        msgs = await self.search(offset=offset, limit=25, **kwargs)
+        msgs = await obj.search(offset=offset, limit=25, **kwargs)
         if not msgs: break
         if max_age_days is not None:
             cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
@@ -373,10 +385,17 @@ async def search_all(self:Guild, limit=500, delay=1.0, max_age_days=None, show=F
     return Messages(all_msgs[:limit])
 
 @patch
+@delegates(_search_all)
+async def search_all(self:Guild, **kwargs):
+    "Paginated search returning up to `limit` messages"
+    return await _search_all(self, **kwargs)
+
+@patch
 @delegates(Guild.search_all, but=['channel_id'])
 async def search_all(self:Channel, **kwargs):
-    gld = await self.guild
-    return await gld.search_all(channel_id=self.id, **kwargs)
+    "Paginated search of this channel; a DM is searched as the user"
+    if self.get('guild_id'): return await (await self.guild).search_all(channel_id=self.id, **kwargs)
+    return await _search_all(self, **kwargs)
 
 # %% ../nbs/00_core.ipynb #beead147
 @patch
