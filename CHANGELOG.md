@@ -2,6 +2,25 @@
 
 <!-- do not remove -->
 
+## 0.2.0
+
+### New Features
+
+- Make voice support an optional extra ([#28](https://github.com/AnswerDotAI/cordslite/pull/28)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add Member.display_name, gate voice debug prints, skip unmapped SSRCs ([#27](https://github.com/AnswerDotAI/cordslite/pull/27)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add channel/thread helpers, user & message accessors, and attachment saving ([#26](https://github.com/AnswerDotAI/cordslite/pull/26)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add Intent flags, unify token handling, and refresh docs ([#25](https://github.com/AnswerDotAI/cordslite/pull/25)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add voice channel leave/disconnect and extract reusable mix_recording ([#21](https://github.com/AnswerDotAI/cordslite/pull/21)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+### Bugs Squashed
+
+- Fix recording alignment by writing silence padding in real-time ([#24](https://github.com/AnswerDotAI/cordslite/pull/24)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Fix ffmpeg recording hangs, voice state filtering, and use UNSET sentinel for optional params ([#23](https://github.com/AnswerDotAI/cordslite/pull/23)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Fix message parsing crashes and gateway reconnect loop ([#22](https://github.com/AnswerDotAI/cordslite/pull/22)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Add voice channel leave/disconnect and extract reusable mix_recording ([#21](https://github.com/AnswerDotAI/cordslite/pull/21)), thanks to [@ncoop57](https://github.com/ncoop57)
+- Fix user token only auth path ([#20](https://github.com/AnswerDotAI/cordslite/pull/20)), thanks to [@KeremTurgutlu](https://github.com/KeremTurgutlu)
+
+
 ## 0.1.0
 
 ### New Features
@@ -111,4 +130,3 @@
 ## 0.0.1
 
 - Initial release
-
