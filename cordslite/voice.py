@@ -19,8 +19,7 @@ from nacl.exceptions import CryptoError
 
 import asyncio,davey,ffmpeg,json,random,struct,time
 import websockets
-try: import opuslib_next
-except: print("Failed to import opuslib-next")
+import opuslib_next
 
 # %% ../nbs/02_voice.ipynb #a78a6d68
 class VoiceClient:

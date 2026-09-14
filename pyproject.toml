@@ -17,17 +17,13 @@ classifiers = [
 ]
 dependencies = [
     "fastcore>=1.12.11",
-    "davey",
-    "python-fasthtml",
-    "ffmpeg-python>=0.2.0",
     "httpx2",
-    "opuslib-next>=1.1.5",
-    "pynacl>=1.6.2",
     "websockets",
 ]
 
 [project.optional-dependencies]
 dev = ['numpy']
+voice = ["davey", "ffmpeg-python>=0.2.0", "opuslib-next>=1.1.5", "pynacl>=1.6.2"]
 
 [project.urls]
 Repository = "https://github.com/AnswerDotAI/cordslite"
