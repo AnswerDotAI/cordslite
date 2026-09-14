@@ -129,7 +129,11 @@ await gc.stop()
 
 ### Bot
 
-[`Bot`](https://AnswerDotAI.github.io/cordslite/bot.html#bot) ties REST and Gateway together with a decorator-based command router. The function name becomes the command name, prefixed with `!` in Discord:
+[`Bot`](https://AnswerDotAI.github.io/cordslite/bot.html#bot) ties REST and Gateway together with a decorator-based command router. It lives in `cordslite.bot`, alongside the voice support, and needs the `voice` extra: `pip install cordslite[voice]`. The function name becomes the command name, prefixed with `!` in Discord:
+
+``` python
+from cordslite.bot import *
+```
 
 ``` python
 bot = Bot(intents)

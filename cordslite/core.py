@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 from enum import IntEnum
 from fastcore.meta import *
 from fastcore.utils import *
-from fasthtml.common import *
+from fastcore.xml import *
 
 import asyncio,httpx,json,mimetypes,os,re
 
