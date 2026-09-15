@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.2.2
+
+### New Features
+
+- strip whitespace from tokens ([#31](https://github.com/AnswerDotAI/cordslite/pull/31)), thanks to [@ncoop57](https://github.com/ncoop57)
+
+
 ## 0.2.1
 
 ### New Features
