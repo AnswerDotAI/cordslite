@@ -21,8 +21,8 @@ import asyncio,httpx,json,mimetypes,os,re
 # %% ../nbs/00_core.ipynb #d9e0f6cf
 class DiscordClient:
     def __init__(self, token=None, user_token=None, name='cordslite', ver='0.1'):
-        self.token = token or os.environ.get('DISCORD_BOT_TOKEN')
-        self.user_token = user_token or os.environ.get('DISCORD_USER_TOKEN')
+        self.token = (token or os.environ.get('DISCORD_BOT_TOKEN') or '').strip() or None
+        self.user_token = (user_token or os.environ.get('DISCORD_USER_TOKEN') or '').strip() or None
         self.base_url = 'https://discord.com/api/v10'
         auth = self.user_token if not self.token else f'Bot {self.token}'
         self.headers = {'Authorization': auth, 'User-Agent': f'DiscordBot ({name}, {ver})'}
