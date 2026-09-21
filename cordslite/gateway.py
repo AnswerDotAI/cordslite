@@ -12,7 +12,7 @@ from .core import *
 from fastcore.utils import *
 from enum import IntFlag
 
-import asyncio,httpx,json,random
+import asyncio,httpx2,json,random
 import websockets, websockets.asyncio.client
 
 # %% ../nbs/01_gateway.ipynb #7716b38f
@@ -48,7 +48,7 @@ class GatewayClient:
         self.ws = self.hb_int = self.session_id = self.seq = None
         self.running = False
         self._tries = 0
-        gw_info = httpx.get(f'{client.base_url}/gateway/bot', headers={'Authorization': f'Bot {self.token}'}).json()
+        gw_info = httpx2.get(f'{client.base_url}/gateway/bot', headers={'Authorization': f'Bot {self.token}'}).json()
         if 'url' not in gw_info: raise ConnectionError(f"Gateway auth failed: {gw_info.get('message', gw_info)}")
         self.url = f"{gw_info['url']}?v=10&encoding=json"
         self.handlers = {'READY': self.on_rdy}

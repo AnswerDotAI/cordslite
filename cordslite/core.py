@@ -15,7 +15,7 @@ from fastcore.meta import *
 from fastcore.utils import *
 from fastcore.xml import *
 
-import asyncio,httpx,json,mimetypes,os,re
+import asyncio,httpx2,json,mimetypes,os,re
 
 
 # %% ../nbs/00_core.ipynb #d9e0f6cf
@@ -26,7 +26,7 @@ class DiscordClient:
         self.base_url = 'https://discord.com/api/v10'
         auth = self.user_token if not self.token else f'Bot {self.token}'
         self.headers = {'Authorization': auth, 'User-Agent': f'DiscordBot ({name}, {ver})'}
-        self.cli = httpx.AsyncClient(base_url=self.base_url, headers=self.headers)
+        self.cli = httpx2.AsyncClient(base_url=self.base_url, headers=self.headers)
 
 
 # %% ../nbs/00_core.ipynb #cb503de5
