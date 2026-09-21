@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ['numpy']
+dev = ['numpy', 'cordslite[voice]']
 voice = ["davey", "ffmpeg-python>=0.2.0", "opuslib-next>=1.1.5", "pynacl>=1.6.2"]
 
 [project.urls]
