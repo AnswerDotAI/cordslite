@@ -20,7 +20,13 @@ import asyncio,httpx2,json,mimetypes,os,re
 
 # %% ../nbs/00_core.ipynb #d9e0f6cf
 class DiscordClient:
-    def __init__(self, token=None, user_token=None, name='cordslite', ver='0.1'):
+    "Async client for Discord's REST API"
+    def __init__(self,
+        token=None, # Bot token, defaulting to `DISCORD_BOT_TOKEN`
+        user_token=None, # User token, defaulting to `DISCORD_USER_TOKEN`. Used by `use_user=True` calls, and by every call when there is no bot token
+        name='cordslite', # Client name for the User-Agent header
+        ver='0.1', # Client version for the User-Agent header
+    ):
         self.token = (token or os.environ.get('DISCORD_BOT_TOKEN') or '').strip() or None
         self.user_token = (user_token or os.environ.get('DISCORD_USER_TOKEN') or '').strip() or None
         self.base_url = 'https://discord.com/api/v10'
@@ -164,7 +170,7 @@ class Messages(list):
 
 @patch
 async def messages(self:Channel, limit=50, before=UNSET, after=UNSET, around=UNSET, use_user=False):
-    "Fetch channel messages. `before`, `after`, and `around` are mutually exclusive message IDs."
+    "Fetch up to `limit` channel messages, oldest first. Discord allows at most 100. `before`, `after`, and `around` are mutually exclusive message IDs or `Message`s, not dates."
     if sum(x is not UNSET for x in [before, after, around]) > 1: raise ValueError("Pass only one of `before`, `after`, or `around`")
 
     def mid(x): return x.id if isinstance(x, Message) else x
@@ -350,6 +356,7 @@ def lbl(ch):
 
 @patch
 async def tree(self:Guild, include_members=True, member_limit=1000):
+    "Printable map of the guild: categories and their channels with topics and IDs, then up to `member_limit` members if `include_members`"
     by_parent,cats = defaultdict(list),[None]
     for c in await self.channels():
         if c.type == ChannelType.GUILD_CATEGORY: cats.append(c)
