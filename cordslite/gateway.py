@@ -125,7 +125,7 @@ async def _reconnect(self:GatewayClient, resume=False):
         try:
             self.ws = await websockets.connect(url, max_size=None)
             return
-        except OSError as e: print('gateway reconnect failed:', repr(e))
+        except Exception as e: print('gateway reconnect failed:', repr(e))
 
 @patch
 async def _listen(self:GatewayClient):
