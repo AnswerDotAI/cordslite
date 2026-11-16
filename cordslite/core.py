@@ -215,19 +215,35 @@ def date2snowflake(date_str):
     dt = datetime.fromisoformat(date_str).replace(tzinfo=timezone.utc)
     return str(int((dt.timestamp() * 1000 - depoch) * (2**22)))
 
-async def _search(obj, path, content=UNSET, author_id=UNSET, channel_id=UNSET, mentions=UNSET, has=UNSET, before=UNSET, after=UNSET,
-    pinned=UNSET, sort_by=UNSET, sort_order=UNSET, offset=UNSET, limit=UNSET, use_user=False, nothread:bool=True):
+async def _search(
+    obj, # `Guild` or `Channel` that sends the request
+    path, # Search endpoint
+    content=UNSET, # Text the messages contain
+    author_id=UNSET, # Only messages by this user, or these users (a list)
+    channel_id=UNSET, # Only messages in this channel, or these channels (a list)
+    mentions=UNSET, # Only messages that mention this user, or these users (a list)
+    has=UNSET, # Only messages with this, e.g. 'file', 'image' or 'link', or a list of them; a leading '-' excludes it, e.g. '-link'
+    before=UNSET, # Only messages before this date ('YYYY-MM-DD') or snowflake ID
+    after=UNSET, # Only messages after this date ('YYYY-MM-DD') or snowflake ID
+    pinned=UNSET, # Only pinned (True) or unpinned (False) messages
+    sort_by=UNSET, # 'timestamp' (Discord's default) or 'relevance'
+    sort_order=UNSET, # 'desc' (newest first, Discord's default) or 'asc'; ignored with `sort_by='relevance'`
+    offset=UNSET, # Results to skip, for paging
+    limit=UNSET, # Results in this request, at most 25
+    use_user=False, # Search with the user token, not the bot's
+    nothread:bool=True, # With `channel_id`: drop hits from those channels' threads
+):
     if before and not str(before).isdigit(): before = date2snowflake(before)
     if after and not str(after).isdigit(): after = date2snowflake(after)
     r = await obj('GET', path, use_user=use_user, content=content, author_id=author_id, channel_id=channel_id,
         mentions=mentions, has=has, min_id=after, max_id=before, pinned=pinned, sort_by=sort_by, sort_order=sort_order, offset=offset, limit=limit)
-    msgs = [m[0] for m in r['messages'] if not (nothread and channel_id and m[0]['channel_id'] != channel_id)]
+    msgs = [m[0] for m in r['messages'] if not (nothread and channel_id and m[0]['channel_id'] not in listify(channel_id))]
     return obj.coll('Message', msgs)
 
 @patch
 @delegates(_search)
 async def search(self:Guild, **kwargs):
-    "Search guild messages. `before`/`after` accept 'YYYY-MM-DD' strings or snowflake IDs."
+    "Search guild messages"
     return await _search(self, f'/guilds/{self.id}/messages/search', **kwargs)
 
 # %% ../nbs/00_core.ipynb #44642992
@@ -376,7 +392,15 @@ async def tree(self:Guild, include_members=True, member_limit=1000):
 
 
 # %% ../nbs/00_core.ipynb #4687437a
-async def _search_all(obj, limit=500, delay=1.0, max_age_days=None, show=False, **kwargs):
+@delegates(_search, but=['offset'])
+async def _search_all(
+    obj, # `Guild` or `Channel` to search
+    limit=500, # Most messages to return
+    delay=1.0, # Seconds between page requests
+    max_age_days=None, # Only messages from the last this many days
+    show=False, # Print progress after each page?
+    **kwargs
+):
     all_msgs, offset = [], 0
     while len(all_msgs) < limit:
         msgs = await obj.search(offset=offset, limit=25, **kwargs)
