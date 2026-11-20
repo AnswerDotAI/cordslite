@@ -72,7 +72,8 @@ class Op(AttrDict):
     def resume(cls, token, session_id, seq): return cls(op=6, d=AttrDict(token=token, session_id=session_id, seq=seq))
 
 # %% ../nbs/01_gateway.ipynb #5e0b8f9f
-evt_typs = dict(MESSAGE_CREATE=Message, MESSAGE_UPDATE=Message, MESSAGE_DELETE=Message, GUILD_CREATE=Guild, CHANNEL_CREATE=Channel)
+evt_typs = dict(MESSAGE_CREATE=Message, MESSAGE_UPDATE=Message, MESSAGE_DELETE=Message, GUILD_CREATE=Guild, CHANNEL_CREATE=Channel,
+    INTERACTION_CREATE=Interaction)
 
 class Event(DiscordObject):
     def __init__(self, data, client):
