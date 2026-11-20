@@ -49,10 +49,8 @@ async def _req(self:DiscordClient, method, path, data=None, files=None, use_user
         headers = {'Authorization': self.user_token}
     if method=='GET': params,json = kw,None
     else: params,json = None,kw
-    r = await self.cli.request(method, path, data=data, files=files, params=params, json=json, headers=headers)
-    if r.status_code == 429:
+    while (r := await self.cli.request(method, path, data=data, files=files, params=params, json=json, headers=headers)).status_code == 429:
         await asyncio.sleep(float(r.headers.get('Retry-After', 1))+0.1)
-        return await self._req(method, path, use_user=use_user, **kw)
     if r.status_code >= 400:
         try: d = r.json()
         except Exception: d = {}
